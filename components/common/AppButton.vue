@@ -1,55 +1,49 @@
 <template>
-  <button :type="type" :class="['btn', btnClass]" :disabled="disabled || loading" @click="$emit('click', $event)">
+  <button
+    :type="type"
+    :class="[
+      'inline-flex items-center justify-center font-medium rounded shadow focus:outline-none transition',
+      variantClasses,
+      sizeClasses,
+      { 'opacity-60 cursor-not-allowed': disabled || loading }
+    ]"
+    :disabled="disabled || loading"
+    @click="onClick"
+  >
     <AppSpinner v-if="loading" small />
-    <slot v-else></slot>
+    <slot v-else />
   </button>
 </template>
 
 <script setup lang="ts">
-import AppSpinner from './AppSpinner.vue';
+import { computed } from 'vue'
+import AppSpinner from './AppSpinner.vue'
 
-interface Props {
-  type?: 'button' | 'submit' | 'reset';
-  variant?: 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info' | 'light' | 'dark' | 'link';
-  size?: 'sm' | 'md' | 'lg';
-  disabled?: boolean;
-  loading?: boolean;
+const props = defineProps({
+  type: { type: String as () => 'button' | 'submit' | 'reset', default: 'button' },
+  variant: { type: String, default: 'primary' },
+  size: { type: String, default: 'md' },
+  disabled: { type: Boolean, default: false },
+  loading: { type: Boolean, default: false }
+})
+
+const emit = defineEmits(['click'])
+
+const variantClasses = computed(() => ({
+  primary: 'bg-blue-600 text-white hover:bg-blue-700',
+  secondary: 'bg-gray-100 text-gray-800 hover:bg-gray-200',
+  danger: 'bg-red-600 text-white hover:bg-red-700',
+  success: 'bg-green-600 text-white hover:bg-green-700',
+  link: 'bg-transparent underline text-blue-600 hover:text-blue-800'
+}[props.variant] || ''))
+
+const sizeClasses = computed(() => ({
+  sm: 'px-3 py-1 text-sm',
+  md: 'px-4 py-2 text-base',
+  lg: 'px-6 py-3 text-lg'
+}[props.size] || 'px-4 py-2 text-base'))
+
+function onClick(e: Event) {
+  emit('click', e)
 }
-
-const props = withDefaults(defineProps<Props>(), {
-  type: 'button',
-  variant: 'primary',
-  size: 'md',
-  disabled: false,
-  loading: false,
-});
-
-defineEmits(['click']);
-
-const btnClass = computed(() => ({
-  [`btn-${props.variant}`]: true,
-  [`btn-${props.size}`]: props.size !== 'md',
-}));
 </script>
-
-<style scoped>
-/* .btn ya está en main.css, aquí solo especificidades si son necesarias */
-.btn-link {
-  font-weight: 400;
-  color: #007bff;
-  text-decoration: none;
-  background-color: transparent;
-  border: none;
-}
-.btn-link:hover {
-  color: #0056b3;
-  text-decoration: underline;
-}
-/* Loading spinner integration */
-.btn .spinner-border-sm {
-  width: 1em;
-  height: 1em;
-  border-width: .2em;
-  vertical-align: -0.125em; /* Alinear mejor con el texto */
-}
-</style>

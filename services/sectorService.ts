@@ -1,33 +1,29 @@
-import type { Sector } from '~/types/types';
+import axios from 'axios'
+import type { Sector } from '~/types/types'
 
-// Ya no se necesita API_BASE_URL aquí, se usará la instancia de $axios
-// ni la función getToken(), el interceptor de axios se encarga del token.
+const apiBase = import.meta.env.VITE_API_BASE || '/api'
 
 export async function getSectors(): Promise<Sector[]> {
-  const { $axios } = useNuxtApp();
-  const response = await $axios.get(`/sectors`);
-  return response.data;
+  const res = await axios.get<Sector[]>(`${apiBase}/sectors`)
+  return res.data
 }
 
 export async function getSectorById(id: number): Promise<Sector> {
-  const { $axios } = useNuxtApp();
-  const response = await $axios.get(`/sectors/${id}`);
-  return response.data;
+  const res = await axios.get<Sector>(`${apiBase}/sectors/${id}`)
+  return res.data
 }
 
-export async function createSector(sector: { name: string; location: string }): Promise<Sector> {
-  const { $axios } = useNuxtApp();
-  const response = await $axios.post(`/sectors`, sector);
-  return response.data;
+export async function createSector(sector: Omit<Sector, 'id'>): Promise<Sector> {
+  const res = await axios.post<Sector>(`${apiBase}/sectors`, sector)
+  return res.data
 }
 
-export async function updateSector(id: number, sector: { name: string; location: string }): Promise<Sector> {
-  const { $axios } = useNuxtApp();
-  const response = await $axios.put(`/sectors/${id}`, sector);
-  return response.data;
+export async function updateSector(id: number, sector: Omit<Sector, 'id'>): Promise<Sector> {
+  const res = await axios.put<Sector>(`${apiBase}/sectors/${id}`, sector)
+  return res.data
 }
 
-export async function deleteSector(id: number): Promise<void> {
-  const { $axios } = useNuxtApp();
-  await $axios.delete(`/sectors/${id}`);
+export async function deleteSector(id: number): Promise<{ success: boolean; message: string }> {
+  const res = await axios.delete(`${apiBase}/sectors/${id}`)
+  return res.data
 }

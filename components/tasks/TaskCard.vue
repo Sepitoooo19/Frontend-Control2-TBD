@@ -1,54 +1,26 @@
 <template>
-  <tr class="task-card-row">
-    <td>{{ task.title }}</td>
-    <td>{{ task.description.substring(0, 50) }}{{ task.description.length > 50 ? '...' : '' }}</td>
-    <td>{{ task.sectorName || task.sectorId }}</td>
-    <td>{{ formatDate(task.dueDate) }}</td>
-    <td>
-      <span :class="task.status === 'COMPLETED' ? 'status-completed' : 'status-pending'">
-        {{ task.status }}
-      </span>
-    </td>
-    <td>{{ task.location }}</td>
-    <td>
-      <AppButton size="sm" variant="secondary" @click="$emit('edit', task)" class="mr-2">Editar</AppButton>
-      <AppButton 
-        v-if="task.status === 'PENDING'" 
-        size="sm" 
-        variant="success" 
+  <div class="bg-white rounded shadow p-4 mb-3 flex flex-col md:flex-row md:items-center md:justify-between">
+    <div>
+      <div class="font-bold text-lg">{{ task.title }}</div>
+      <div class="text-gray-600 text-sm">{{ task.description }}</div>
+      <div class="text-xs text-gray-400">Vence: {{ task.dueDate }}</div>
+      <div class="text-xs text-gray-400">Sector: {{ task.sectorName || task.sectorId }}</div>
+      <div class="text-xs text-gray-500 font-mono">Ubicación: {{ task.location }}</div>
+    </div>
+    <div class="flex flex-row gap-2 mt-2 md:mt-0">
+      <AppButton size="sm" variant="secondary" @click="$emit('edit', task)">Editar</AppButton>
+      <AppButton
+        v-if="task.status === 'PENDING'"
+        size="sm"
+        variant="success"
         @click="$emit('complete', task.id)"
-        :loading="isUpdatingStatus"
-        class="mr-2">
-        Completar
-      </AppButton>
-      <AppButton 
-        size="sm" 
-        variant="danger" 
-        @click="$emit('delete', task.id)"
-        :loading="isDeleting">
-        Eliminar
-      </AppButton>
-    </td>
-  </tr>
+      >Completar</AppButton>
+      <AppButton size="sm" variant="danger" @click="$emit('delete', task.id)">Eliminar</AppButton>
+    </div>
+  </div>
 </template>
-
 <script setup lang="ts">
-import type { Task } from '~/types/types';
-import { formatDate } from '~/utils/formats';
-import AppButton from '~/components/common/AppButton.vue';
-
-defineProps<{
-  task: Task;
-  isUpdatingStatus?: boolean;
-  isDeleting?: boolean;
-}>();
-
-defineEmits(['edit', 'complete', 'delete']);
+import AppButton from '~/components/common/AppButton.vue'
+defineProps<{ task: any }>()
+defineEmits(['edit', 'complete', 'delete'])
 </script>
-
-<style scoped>
-.status-completed { color: green; font-weight: bold; }
-.status-pending { color: orange; font-weight: bold; }
-.mr-2 { margin-right: 0.5rem; }
-/* No se necesitan estilos de tr aquí si la tabla global ya los maneja */
-</style>

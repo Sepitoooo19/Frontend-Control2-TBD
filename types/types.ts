@@ -25,48 +25,10 @@ export interface Task {
   sectorId: number;
   location: string; // WKT
   createdAt: string;
-  sectorName?: string; // opcional para mostrar el nombre del sector
 }
 
-// DTO para crear tarea
-export interface TaskCreateDTO {
-  title: string;
-  description: string;
-  dueDate: string;
-  status?: "PENDING" | "COMPLETED";
-  sectorId: number;
-  location: string; // WKT
+// DTO Filtro
+export interface FilterDTO {
+  status: string; // "PENDING" | "COMPLETED"
+  word: string; // Palabra clave para buscar en título o descripción
 }
-
-// DTO para actualizar tarea
-export interface TaskUpdateDTO {
-  title?: string;
-  description?: string;
-  dueDate?: string;
-  status?: "PENDING" | "COMPLETED";
-  sectorId?: number;
-  location?: string; // WKT
-}
-
-// (Opcional) Para estadísticas o consultas espaciales
-export interface TaskStatsBySector {
-  sectorId: number;
-  sectorName: string;
-  totalTasks: number;
-}
-
-export interface NearestTask {
-  id: number;
-  title: string;
-  distance: number;
-  dueDate: string;
-}
-
-export interface CompletedTaskDistanceDTO {
-  id: number;
-  title: string;
-  completedAt: string;
-  distance: number;
-}
-
-// Puedes agregar más DTO según tus endpoints de consultas espaciales.
