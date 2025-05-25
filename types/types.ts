@@ -1,99 +1,72 @@
-export interface Client {
+// USUARIO
+export interface User {
+  id: number;
+  username: string;
+  name: string;
+  role: "USER" | "ADMIN";
+  location: string; // WKT
+}
+
+// SECTOR
+export interface Sector {
   id: number;
   name: string;
-  rut: string;
-  email: string;
-  phone: string;
-  address: string;
+  location: string; // WKT
 }
 
-export interface Order {
-  id: number
-  address: string
-  orderDate: string
-  deliveryDate: string
-  status: string
-  products: number
-  clientId: number
-  nameClient: string
-  dealerId: number
-  dealerName: string
-  totalPrice: number
-  totalProducts: number
-}
-
-export interface Dealer {
-  id: number
-  name: string
-  rut: string
-  phone: string
-  email: string
-  plate: string
-  vehicle: string
-}
-
-export interface Company {
-  id: number
-  name: string
-  phone: string
-  email: string
-  type: string
-}
-
-export type Product = {
+// TAREA
+export interface Task {
   id: number;
-  name: string;
-  stock: number;
-  price: number;
-  category: string;
-  companyId: number;
+  title: string;
+  description: string;
+  dueDate: string;
+  status: "PENDING" | "COMPLETED";
+  userId: number;
+  sectorId: number;
+  location: string; // WKT
+  createdAt: string;
+  sectorName?: string; // opcional para mostrar el nombre del sector
 }
 
-
-export interface OrderDetails {
-  id: number
-  orderId: number
-  totalProducts: number
-  price: number
-  paymentMethod: string
+// DTO para crear tarea
+export interface TaskCreateDTO {
+  title: string;
+  description: string;
+  dueDate: string;
+  status?: "PENDING" | "COMPLETED";
+  sectorId: number;
+  location: string; // WKT
 }
 
-export interface PaymentMethod {
-  id: number
-  type: string
+// DTO para actualizar tarea
+export interface TaskUpdateDTO {
+  title?: string;
+  description?: string;
+  dueDate?: string;
+  status?: "PENDING" | "COMPLETED";
+  sectorId?: number;
+  location?: string; // WKT
 }
 
-export interface TopSpender{
-  id: number
-  name: string
-  rut: string
-  email: string
-  phone: string
-  address: string
-  totalSpent: number
-
+// (Opcional) Para estadísticas o consultas espaciales
+export interface TaskStatsBySector {
+  sectorId: number;
+  sectorName: string;
+  totalTasks: number;
 }
 
-export interface OrderTotalProductsDTO{
-  id: number
-     orderDate: string;
-     deliveryDate: string;
-     status: string;
-     totalPrice: number;
-    totalProducts: number;
-
+export interface NearestTask {
+  id: number;
+  title: string;
+  distance: number;
+  dueDate: string;
 }
 
-
-export interface OrderNameAddressDTO {
-   id: number;
-      orderDate: string;
-      deliveryDate: string;
-      status: string;
-      totalPrice: number;
-      clientId: number;
-      nameClient: string // Nombre del cliente
-      address: string // Dirección del cliente
+export interface CompletedTaskDistanceDTO {
+  id: number;
+  title: string;
+  completedAt: string;
+  distance: number;
 }
 
-
+// Puedes agregar más DTO según tus endpoints de consultas espaciales.

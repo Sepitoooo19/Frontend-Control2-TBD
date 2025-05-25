@@ -1,8 +1,15 @@
-<!-- pagina principal redirigida al login-->
-<script setup>
-import { useRouter } from 'vue-router';
+<template>
+  <div class="container">
+    <p>Redirigiendo...</p>
+  </div>
+</template>
 
-const router = useRouter();
+<script setup lang="ts">
+definePageMeta({
+  middleware: 'auth-role' // Ya debería manejar la redirección basada en token/rol
+});
 
-router.push('/login'); // Redirige automáticamente al login
+// El middleware authRole ya se encarga de redirigir desde "/"
+// si el usuario está logueado. Si no está logueado, lo redirige a /login.
+// Esta página sirve como un punto de entrada que el middleware evaluará.
 </script>
