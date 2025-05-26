@@ -2,7 +2,7 @@
   <div class="flex flex-col min-h-screen">
     <header class="bg-blue-600 text-white py-4 w-full">
       <div class="flex justify-between items-center px-4">
-        <h1 class="text-2xl font-bold">Cliente - Gestor de Tareas</h1>
+        <h1 class="text-2xl font-bold">Usuario - Gestor de Tareas</h1>
         <ul class="flex space-x-4">
           <li><NuxtLink to="/home-user" class="hover:underline">Inicio</NuxtLink></li>
           <li><NuxtLink to="/tasks" class="hover:underline">Tareas</NuxtLink></li>
@@ -15,7 +15,7 @@
       </div>
     </header>
     <main class="flex-grow container mx-auto py-8">
-      <slot />
+    <slot />
     </main>
     <footer class="bg-gray-800 text-white py-4">
       <div class="container mx-auto text-center">
