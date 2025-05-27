@@ -9,12 +9,15 @@ import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { getSectorById } from '~/services/sectorService'
 import SectorForm from '~/components/sectors/SectorForm.vue'
+import type { Sector } from '~/types/types'
 definePageMeta({ middleware: 'auth-role' })
+
 const route = useRoute()
 const router = useRouter()
-const sectorData = ref(null)
+const sectorData = ref<Sector | undefined>(undefined)
 onMounted(async () => {
-  sectorData.value = await getSectorById(Number(route.params.id))
+  const result = await getSectorById(Number(route.params.id))
+  sectorData.value = result ?? undefined
 })
 const onSaved = () => router.push('/sectors')
 </script>

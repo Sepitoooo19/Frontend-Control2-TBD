@@ -41,7 +41,6 @@ const handleSubmit = async () => {
     error.value = 'Debes ingresar todos los campos obligatorios.'
     return
   }
-  // Aseguramos que todos los campos sean del tipo requerido, nunca undefined
   const finalTask: Omit<Task, 'id' | 'createdAt' | 'status' | 'userId'> = {
     title: form.value.title || '',
     description: form.value.description || '',

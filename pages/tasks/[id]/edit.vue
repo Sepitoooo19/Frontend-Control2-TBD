@@ -6,7 +6,7 @@
 </template>
 <script setup lang="ts">
 import { useRoute, useRouter } from 'vue-router'
-import TaskForm from '~/components/TaskForm.vue'
+import TaskForm from '~/components/tasks/TaskForm.vue'
 definePageMeta({ middleware: 'auth-role' })
 const route = useRoute()
 const router = useRouter()

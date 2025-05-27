@@ -1,7 +1,7 @@
 import axios from 'axios'
 import type { Sector } from '~/types/types'
 
-const apiBase = import.meta.env.VITE_API_BASE || '/api'
+const apiBase = import.meta.env.VITE_API_BASE || '/'
 
 // ¿Cuántas tareas ha hecho el usuario por sector?
 export async function getUserTaskCountBySector(): Promise<Record<string, number>> {

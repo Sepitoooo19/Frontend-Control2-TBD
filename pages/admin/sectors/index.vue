@@ -4,18 +4,38 @@
       <h2 class="text-2xl font-bold">Sectores</h2>
       <router-link to="/sectors/create" class="btn btn-primary">Crear Sector</router-link>
     </div>
-    <SectorList @edit="onEdit" @delete="onDelete" />
+    <SectorList
+      :sectors="sectors"
+      @edit="onEdit"
+      @delete="onDelete"
+    />
   </div>
 </template>
+
 <script setup lang="ts">
+import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import SectorList from '~/components/sectors/SectorList.vue'
+import { getSectors, deleteSector } from '~/services/sectorService'
+import type { Sector } from '~/types/types'
+
 definePageMeta({ middleware: 'auth-role' })
 
-// Si necesitas lógica para editar/eliminar, puedes manejarla aquí o en el componente
-const onEdit = (sector) => {
-  // router.push(`/sectors/${sector.id}/edit`)
+const sectors = ref<Sector[]>([])
+const router = useRouter()
+
+const fetchSectors = async () => {
+  sectors.value = await getSectors()
 }
-const onDelete = (id) => {
-  // lógica de borrado (usualmente delegada al componente)
+
+onMounted(fetchSectors)
+
+const onEdit = (sector: Sector) => {
+  router.push(`/admin/sectors/${sector.id}/edit`)
+}
+
+const onDelete = async (id: number) => {
+  await deleteSector(id)
+  await fetchSectors() // Refresca la lista
 }
 </script>

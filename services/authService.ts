@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const apiBase = import.meta.env.VITE_API_BASE || '/api'
+const apiBase = import.meta.env.VITE_API_BASE || '/'
 
 export async function register(data: {
   username: string
@@ -15,5 +15,11 @@ export async function register(data: {
 
 export async function login(credentials: { username: string, password: string }) {
   const res = await axios.post(`${apiBase}/auth/login`, credentials)
+  return res.data
+}
+
+// Cambiar contraseña usuario
+export async function updatePassword(id: number, newPassword: string): Promise<{ success: boolean }> {
+  const res = await axios.put(`${apiBase}/users/${id}/password`, { password: newPassword })
   return res.data
 }

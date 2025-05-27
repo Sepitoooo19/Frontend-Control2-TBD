@@ -1,7 +1,7 @@
 import axios from 'axios'
 import type { Sector } from '~/types/types'
 
-const apiBase = import.meta.env.VITE_API_BASE || '/api'
+const apiBase = import.meta.env.VITE_API_BASE || '/'
 
 export async function getSectors(): Promise<Sector[]> {
   const res = await axios.get<Sector[]>(`${apiBase}/sectors`)
