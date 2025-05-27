@@ -63,3 +63,28 @@ const handleSubmit = async () => {
   }
 }
 </script>
+
+<template>
+  <form @submit.prevent="handleSubmit" class="max-w-lg mx-auto bg-white p-6 rounded-xl shadow space-y-4">
+    <AppInput label="Título" v-model="form.title" required />
+    <AppInput label="Descripción" v-model="form.description" required />
+    <AppInput label="Fecha límite" type="date" v-model="form.dueDate" required />
+    <div>
+      <label class="block mb-1 font-medium text-gray-700">Sector</label>
+      <select v-model="form.sectorId" class="w-full rounded-lg border px-4 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-300">
+        <option disabled value="">Seleccione un sector</option>
+        <option v-for="sector in sectors" :value="sector.id" :key="sector.id">{{ sector.name }}</option>
+      </select>
+    </div>
+    <div class="flex gap-2">
+      <AppInput label="Latitud" v-model="lat" type="number" step="any" required />
+      <AppInput label="Longitud" v-model="lng" type="number" step="any" required />
+    </div>
+    <div class="flex justify-end gap-2">
+      <AppButton type="submit" :loading="loading" variant="primary">
+        {{ isEditMode ? 'Actualizar' : 'Guardar' }} Tarea
+      </AppButton>
+    </div>
+    <p v-if="error" class="text-red-500">{{ error }}</p>
+  </form>
+</template>

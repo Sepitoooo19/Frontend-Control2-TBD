@@ -1,8 +1,10 @@
 <template>
-  <form @submit.prevent="handleSubmit" class="max-w-lg mx-auto space-y-4">
+  <form @submit.prevent="handleSubmit" class="max-w-lg mx-auto bg-white p-6 rounded-xl shadow space-y-4">
     <AppInput label="Nombre del Sector" v-model="form.name" required />
-    <AppInput label="Latitud" v-model="lat" type="number" step="any" required />
-    <AppInput label="Longitud" v-model="lng" type="number" step="any" required />
+    <div class="flex gap-2">
+      <AppInput label="Latitud" v-model="lat" type="number" step="any" required />
+      <AppInput label="Longitud" v-model="lng" type="number" step="any" required />
+    </div>
     <div class="flex justify-end gap-2">
       <AppButton type="button" variant="secondary" @click="$emit('close')">Cancelar</AppButton>
       <AppButton type="submit" variant="primary" :loading="loading">

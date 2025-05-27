@@ -1,6 +1,6 @@
 <template>
-  <div class="max-w-md w-full mx-auto bg-white p-8 rounded shadow-md mt-10">
-    <h2 class="text-2xl font-bold mb-6 text-center">Iniciar Sesión</h2>
+  <div class="max-w-md w-full mx-auto bg-white p-8 rounded-xl shadow-lg mt-10">
+    <h2 class="text-2xl font-bold mb-6 text-center text-blue-700">Iniciar Sesión</h2>
     <form @submit.prevent="handleLogin" class="space-y-4">
       <AppInput label="Usuario" v-model="username" required />
       <AppInput label="Contraseña" type="password" v-model="password" required />
@@ -30,13 +30,10 @@ const handleLogin = async () => {
   loading.value = true
   loginError.value = ''
   try {
-    // Llama al backend, espera { token, role }
     const response = await loginService({ username: username.value, password: password.value })
     const { token, role } = response
-
     localStorage.setItem('token', token)
     localStorage.setItem('role', role)
-    // Redirige según rol
     if (role === 'ADMIN') {
       router.push('/home-admin')
     } else {

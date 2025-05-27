@@ -15,11 +15,11 @@
       </div>
     </header>
     <main class="flex-grow container mx-auto py-8">
-    <slot />
+      <slot />
     </main>
     <footer class="bg-gray-800 text-white py-4">
       <div class="container mx-auto text-center">
-        <p>&copy; 2025 Gestor de Tareas</p>
+        <p>&copy; {{ new Date().getFullYear() }} Gestor de Tareas</p>
       </div>
     </footer>
   </div>

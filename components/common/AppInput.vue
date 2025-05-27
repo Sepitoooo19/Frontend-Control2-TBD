@@ -1,39 +1,38 @@
 <template>
-  <div class="mb-2">
+  <div class="mb-4">
     <label v-if="label" :for="id" class="block mb-1 font-medium text-gray-700">{{ label }}</label>
     <input
       :id="id"
+      v-bind="$attrs"
       :type="type"
-      :value="modelValue"
-      @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)"
       :placeholder="placeholder"
-      :required="required"
-      :disabled="disabled"
       :class="[
-        'w-full rounded border focus:ring focus:ring-blue-200 focus:outline-none',
+        'w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2',
         error
-          ? 'border-red-500 focus:border-red-600'
-          : 'border-gray-300 focus:border-blue-500',
-        inputClass
+          ? 'border-red-500 focus:ring-red-200'
+          : 'border-gray-300 focus:ring-blue-300'
       ]"
+      v-model="model"
+      :disabled="disabled"
     />
-    <p v-if="hint" class="text-sm text-gray-400">{{ hint }}</p>
-    <p v-if="error" class="text-xs text-red-500 mt-1">{{ error }}</p>
+    <p v-if="error" class="text-red-500 text-sm mt-1">{{ error }}</p>
   </div>
 </template>
 
 <script setup lang="ts">
-defineProps({
-  modelValue: [String, Number],
+import { computed } from 'vue'
+const props = defineProps({
   label: String,
-  id: String,
-  type: { type: String, default: 'text' },
+  modelValue: [String, Number],
+  type: { type: String, default: "text" },
   placeholder: String,
-  required: Boolean,
-  disabled: Boolean,
-  inputClass: String,
-  hint: String,
-  error: String
-})
-defineEmits(['update:modelValue'])
+  error: String,
+  id: String,
+  disabled: Boolean
+});
+const emit = defineEmits(["update:modelValue"]);
+const model = computed({
+  get: () => props.modelValue,
+  set: v => emit("update:modelValue", v)
+});
 </script>

@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col min-h-screen">
-    <header class="bg-gray-900 text-white py-4 w-full">
+    <header class="bg-red-600 text-white py-4 w-full">
       <div class="flex justify-between items-center px-4">
         <h1 class="text-2xl font-bold">Admin - Gestor de Tareas</h1>
         <ul class="flex space-x-4">
@@ -20,7 +20,7 @@
     </main>
     <footer class="bg-gray-800 text-white py-4">
       <div class="container mx-auto text-center">
-        <p>&copy; 2025 Admin - Gestor de Tareas</p>
+        <p>&copy; {{ new Date().getFullYear() }} Admin - Gestor de Tareas</p>
       </div>
     </footer>
   </div>

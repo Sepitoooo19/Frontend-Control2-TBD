@@ -1,19 +1,21 @@
 <template>
-  <div class="max-w-md w-full mx-auto bg-white p-8 rounded shadow-md mt-10">
-    <h2 class="text-2xl font-bold mb-6 text-center">Registro de Usuario</h2>
+  <div class="max-w-md w-full mx-auto bg-white p-8 rounded-xl shadow-lg mt-10">
+    <h2 class="text-2xl font-bold mb-6 text-center text-blue-700">Registro de Usuario</h2>
     <form @submit.prevent="handleRegister" class="space-y-4">
       <AppInput label="Usuario" v-model="form.username" required />
       <AppInput label="Nombre Completo" v-model="form.name" required />
       <AppInput label="Contraseña" type="password" v-model="form.password" required />
       <div>
         <label class="block mb-1 font-medium text-gray-700">Rol</label>
-        <select v-model="form.role" class="w-full border rounded px-3 py-2 text-gray-700 focus:outline-none focus:ring focus:border-blue-500" required>
+        <select v-model="form.role" class="w-full border rounded-lg px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-300" required>
           <option value="USER">Usuario</option>
           <option value="ADMIN">Administrador</option>
         </select>
       </div>
-      <AppInput label="Latitud" v-model="lat" type="number" step="any" required />
-      <AppInput label="Longitud" v-model="lng" type="number" step="any" required />
+      <div class="flex gap-2">
+        <AppInput label="Latitud" v-model="lat" type="number" step="any" required />
+        <AppInput label="Longitud" v-model="lng" type="number" step="any" required />
+      </div>
       <AppButton type="submit" class="w-full" :loading="loading">Registrarse</AppButton>
       <p v-if="registerError" class="text-red-500 text-center mt-2">{{ registerError }}</p>
       <div class="text-center mt-3">

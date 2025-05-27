@@ -1,6 +1,8 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'default', middleware: 'auth-role' });
+import TaskNotifications from '~/components/tasks/TaskNotifications.vue'
 </script>
+
 <template>
   <main class="p-6">
     <TaskNotifications />
@@ -12,6 +14,3 @@ definePageMeta({ layout: 'default', middleware: 'auth-role' });
     </ul>
   </main>
 </template>
-<script setup lang="ts">
-import TaskNotifications from '~/components/TaskNotifications.vue'
-</script>
