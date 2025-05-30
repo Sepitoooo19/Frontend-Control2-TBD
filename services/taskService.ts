@@ -38,3 +38,8 @@ export async function filterTasks(filter: FilterDTO): Promise<Task[]> {
   const res = await axios.post<Task[]>(`${apiBase}/tasks/filter`, filter)
   return res.data
 }
+
+export async function getAllTasks() {
+  const res = await axios.get(`${apiBase}/tasks`)
+  return res.data
+}

@@ -1,5 +1,5 @@
-import { defineStore } from 'pinia';
-import type { User } from '~/types/types';
+import { defineStore } from 'pinia'
+import type { User } from '~/types/types'
 
 export const useUserStore = defineStore('user', {
   state: () => ({
@@ -15,44 +15,44 @@ export const useUserStore = defineStore('user', {
   },
   actions: {
     setUser(payload: { id: number; name: string; role: 'USER' | 'ADMIN'; token: string }) {
-      this.userId = payload.id;
-      this.userName = payload.name;
-      this.userRole = payload.role;
-      this.token = payload.token;
+      this.userId = payload.id
+      this.userName = payload.name
+      this.userRole = payload.role
+      this.token = payload.token
 
       if (typeof window !== 'undefined') {
-        localStorage.setItem('token', payload.token);
-        localStorage.setItem('role', payload.role);
-        localStorage.setItem('userId', payload.id.toString());
-        localStorage.setItem('userName', payload.name);
+        localStorage.setItem('token', payload.token)
+        localStorage.setItem('role', payload.role)
+        localStorage.setItem('userId', payload.id.toString())
+        localStorage.setItem('userName', payload.name)
       }
     },
     loadUserFromLocalStorage() {
       if (typeof window !== 'undefined') {
-        const token = localStorage.getItem('token');
-        const role = localStorage.getItem('role') as 'USER' | 'ADMIN' | '';
-        const userId = localStorage.getItem('userId');
-        const userName = localStorage.getItem('userName');
+        const token = localStorage.getItem('token')
+        const role = localStorage.getItem('role') as 'USER' | 'ADMIN' | ''
+        const userId = localStorage.getItem('userId')
+        const userName = localStorage.getItem('userName')
 
         if (token && role && userId) {
-          this.token = token;
-          this.userRole = role;
-          this.userId = parseInt(userId, 10);
-          this.userName = userName || '';
+          this.token = token
+          this.userRole = role
+          this.userId = parseInt(userId, 10)
+          this.userName = userName || ''
         }
       }
     },
     clearUser() {
-      this.userId = null;
-      this.userName = '';
-      this.userRole = '';
-      this.token = '';
+      this.userId = null
+      this.userName = ''
+      this.userRole = ''
+      this.token = ''
       if (typeof window !== 'undefined') {
-        localStorage.removeItem('token');
-        localStorage.removeItem('role');
-        localStorage.removeItem('userId');
-        localStorage.removeItem('userName');
+        localStorage.removeItem('token')
+        localStorage.removeItem('role')
+        localStorage.removeItem('userId')
+        localStorage.removeItem('userName')
       }
     },
   },
-});
+})

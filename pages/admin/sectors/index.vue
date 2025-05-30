@@ -2,7 +2,7 @@
   <div class="container max-w-3xl mx-auto">
     <div class="flex justify-between items-center mb-4">
       <h2 class="text-2xl font-bold">Sectores</h2>
-      <router-link to="/sectors/create" class="btn btn-primary">Crear Sector</router-link>
+      <router-link to="/admin/sectors/create" class="btn btn-primary">Crear Sector</router-link>
     </div>
     <SectorList
       :sectors="sectors"
@@ -19,8 +19,10 @@ import SectorList from '~/components/sectors/SectorList.vue'
 import { getSectors, deleteSector } from '~/services/sectorService'
 import type { Sector } from '~/types/types'
 
-definePageMeta({ middleware: 'auth-role' })
-
+definePageMeta({
+  layout: 'admin',
+  middleware: 'auth-role'
+})
 const sectors = ref<Sector[]>([])
 const router = useRouter()
 

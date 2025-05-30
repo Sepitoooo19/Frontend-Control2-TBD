@@ -29,3 +29,8 @@ export async function updateProfile(id: number, data: Partial<Pick<User, 'name' 
   const res = await axios.put(`${apiBase}/users/${id}`, data)
   return res.data
 }
+
+export async function getAllUsers() {
+  const res = await axios.get(`${apiBase}/users`)
+  return res.data
+}

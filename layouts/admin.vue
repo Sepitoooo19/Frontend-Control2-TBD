@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col min-h-screen">
-    <header class="bg-red-600 text-white py-4 w-full">
+    <header class="bg-red-600 text-white py-4 w-full shadow">
       <div class="flex justify-between items-center px-4">
         <h1 class="text-2xl font-bold">Admin - Gestor de Tareas</h1>
         <ul class="flex space-x-4">
@@ -25,7 +25,6 @@
     </footer>
   </div>
 </template>
-
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
 const router = useRouter()
@@ -34,7 +33,6 @@ const handleLogout = () => {
   router.push('/login')
 }
 </script>
-
 <style scoped>
 header ul {
   display: flex;

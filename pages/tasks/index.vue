@@ -1,3 +1,9 @@
+<template>
+  <div>
+    <TaskList :tasks="tasks" />
+  </div>
+</template>
+
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
@@ -32,9 +38,5 @@ const onDelete = async (id: number) => {
     await deleteTask(id)
     await loadTasks()
   }
-}
-const onFilter = (f: { status: string, word: string }) => {
-  filter.value = f
-  loadTasks()
 }
 </script>

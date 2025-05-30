@@ -15,5 +15,10 @@ export default defineNuxtConfig({
   plugins: [
     '~/plugins/axios.ts', // Asegúrate que el plugin de axios se registre
     '~/plugins/vue3-toastify.ts'
+  ],
+
+  css: [
+    '@/assets/css/main.css'
   ]
+
 })

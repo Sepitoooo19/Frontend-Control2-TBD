@@ -3,6 +3,11 @@ import type { Sector } from '~/types/types'
 
 const apiBase = import.meta.env.VITE_API_BASE || '/'
 
+export async function getStatistics() {
+  const res = await axios.get(`${apiBase}/admin/statistics`)
+  return res.data
+}
+
 // ¿Cuántas tareas ha hecho el usuario por sector?
 export async function getUserTaskCountBySector(): Promise<Record<string, number>> {
   const res = await axios.get(`${apiBase}/stats/user-tasks-by-sector`)

@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col min-h-screen bg-gray-100">
     <main class="flex-grow flex flex-col items-center justify-center">
-      <div class="bg-white shadow-lg rounded-lg p-8 max-w-md w-full">
+      <div class="bg-white shadow-lg rounded-xl p-8 max-w-md w-full">
         <h1 class="text-2xl font-bold text-center mb-6 text-blue-700">Bienvenido a Gestor de Tareas</h1>
         <slot />
         <p class="text-center text-gray-500 mt-4">Por favor, inicia sesión o regístrate para continuar.</p>
