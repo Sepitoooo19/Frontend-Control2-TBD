@@ -17,6 +17,11 @@ const loading = ref(false)
 const error = ref('')
 const isEditMode = ref(false)
 
+function formatForDateTimeLocal(dt: string | undefined) {
+  // Espera dt en formato "2025-06-15T14:30:00"
+  return dt ? dt.substring(0, 16) : ''
+}
+
 onMounted(async () => {
   sectors.value = await getSectors()
   if (props.taskId) {
@@ -25,7 +30,7 @@ onMounted(async () => {
     form.value = { 
       title: task.title,
       description: task.description,
-      dueDate: task.dueDate?.substring(0, 10),
+      dueDate: formatForDateTimeLocal(task.dueDate),
       sectorId: task.sectorId,
       location: task.location
     }
@@ -41,10 +46,19 @@ const handleSubmit = async () => {
     error.value = 'Debes ingresar todos los campos obligatorios.'
     return
   }
+
+  let dueDate = form.value.dueDate || ''
+  // Si viene "YYYY-MM-DDTHH:mm", añade ":00"
+  if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(dueDate)) {
+    dueDate = dueDate + ':00'
+  } else if (/^\d{4}-\d{2}-\d{2}$/.test(dueDate)) {
+    dueDate = dueDate + 'T00:00:00'
+  }
+
   const finalTask: Omit<Task, 'id' | 'createdAt' | 'status' | 'userId'> = {
     title: form.value.title || '',
     description: form.value.description || '',
-    dueDate: form.value.dueDate || '',
+    dueDate: dueDate,
     sectorId: Number(form.value.sectorId),
     location: latLngToWKT(Number(lat.value), Number(lng.value)),
   }
@@ -68,7 +82,7 @@ const handleSubmit = async () => {
   <form @submit.prevent="handleSubmit" class="max-w-lg mx-auto bg-white p-6 rounded-xl shadow space-y-4">
     <AppInput label="Título" v-model="form.title" required />
     <AppInput label="Descripción" v-model="form.description" required />
-    <AppInput label="Fecha límite" type="date" v-model="form.dueDate" required />
+    <AppInput label="Fecha y hora límite" type="datetime-local" v-model="form.dueDate" required />
     <div>
       <label class="block mb-1 font-medium text-gray-700">Sector</label>
       <select v-model="form.sectorId" class="w-full rounded-lg border px-4 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-300">

@@ -11,7 +11,7 @@
           <th class="py-3 px-4 text-left font-semibold text-blue-800">Usuario</th>
           <th class="py-3 px-4 text-left font-semibold text-blue-800">Sector</th>
           <th class="py-3 px-4 text-left font-semibold text-blue-800">Ubicación</th>
-          <th v-if="userStore.isAdmin">Acciones</th>
+          <th v-if="showAdminActions">Acciones</th>
         </tr>
       </thead>
       <tbody>
@@ -32,7 +32,7 @@
           <td class="py-2 px-4">{{ task.userId }}</td>
           <td class="py-2 px-4">{{ task.sectorId }}</td>
           <td class="py-2 px-4 font-mono text-xs text-gray-700">{{ task.location }}</td>
-          <td v-if="userStore.isAdmin" class="py-2 px-4 flex gap-2">
+          <td v-if="showAdminActions" class="py-2 px-4 flex gap-2">
             <AppButton size="sm" variant="secondary" @click="goToEdit(task.id)">Editar</AppButton>
             <AppButton size="sm" variant="danger" @click="handleDelete(task.id)">Eliminar</AppButton>
           </td>
@@ -46,7 +46,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import type { Task } from '~/types/types'
 import AppButton from '~/components/common/AppButton.vue'
@@ -55,7 +55,7 @@ import { useUserStore } from '~/stores/auth'
 
 const userStore = useUserStore()
 
-const props = defineProps<{ tasks: Task[] }>()
+const props = defineProps<{ tasks: Task[]; isAdmin?: boolean }>()
 const emit = defineEmits(['deleted'])
 
 const localTasks = ref<Task[]>([...props.tasks])
@@ -67,6 +67,8 @@ watch(
     localTasks.value = [...newTasks]
   }
 )
+
+const showAdminActions = computed(() => props.isAdmin ?? userStore.isAdmin)
 
 const goToEdit = (taskId: number) => {
   router.push(`/tasks/${taskId}/edit`)

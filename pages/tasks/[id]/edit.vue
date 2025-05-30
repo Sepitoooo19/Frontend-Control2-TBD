@@ -7,7 +7,12 @@
 <script setup lang="ts">
 import { useRoute, useRouter } from 'vue-router'
 import TaskForm from '~/components/tasks/TaskForm.vue'
-definePageMeta({ middleware: 'auth-role' })
+
+definePageMeta({
+  layout: 'admin',
+  middleware: 'auth-role'
+})
+
 const route = useRoute()
 const router = useRouter()
 const onSaved = () => router.push('/tasks')
