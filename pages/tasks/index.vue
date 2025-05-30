@@ -1,16 +1,21 @@
 <template>
-  <div>
-    <TaskList :tasks="tasks" />
+  <div class="container mx-auto py-8">
+    <h1 class="text-3xl font-bold mb-2 text-blue-800 flex items-center gap-2">
+      <span>📝</span> Mis Tareas
+    </h1>
+    <div class="bg-white rounded-lg shadow p-4 mb-8">
+      <TaskList :tasks="tasks" />
+      <div class="mt-2 text-right">
+        <NuxtLink to="/tasks/create" class="text-blue-600 hover:underline">Crear nueva tarea</NuxtLink>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
 import TaskList from '~/components/tasks/TaskList.vue'
-import TaskFilters from '~/components/tasks/TaskFilters.vue'
-import TaskNotifications from '~/components/tasks/TaskNotifications.vue'
-import { getTasks, filterTasks, deleteTask } from '~/services/taskService'
+import { getTasks } from '~/services/taskService'
 import type { Task } from '~/types/types'
 
 definePageMeta({
@@ -18,25 +23,12 @@ definePageMeta({
   middleware: 'auth-role'
 })
 
-const router = useRouter()
 const tasks = ref<Task[]>([])
-const filter = ref({ status: '', word: '' })
 
 const loadTasks = async () => {
-  if (filter.value.status || filter.value.word) {
-    tasks.value = await filterTasks(filter.value)
-  } else {
-    tasks.value = await getTasks()
-  }
+  tasks.value = await getTasks()
+  if (tasks.value.length > 5) tasks.value = tasks.value.slice(0, 5)
 }
 
 onMounted(loadTasks)
-
-const onEdit = (task: Task) => router.push(`/tasks/${task.id}/edit`)
-const onDelete = async (id: number) => {
-  if (confirm('¿Estás seguro de que deseas eliminar esta tarea?')) {
-    await deleteTask(id)
-    await loadTasks()
-  }
-}
 </script>

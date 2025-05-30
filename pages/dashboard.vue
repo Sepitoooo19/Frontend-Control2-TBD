@@ -34,27 +34,16 @@ import { useUserStore } from '~/stores/auth'
 import TaskList from '~/components/tasks/TaskList.vue'
 import UserSectors from '~/components/users/UserSectors.vue'
 import UserStats from '~/components/users/UserStats.vue'
-import axios from 'axios'
+import { getTasks } from '~/services/taskService'
 
 const userStore = useUserStore()
 const userName = userStore.userName || 'Usuario'
 const tasks = ref([])
 
-// usar layout user
-definePageMeta({ layout: 'user', middleware: 'auth-role' });
+definePageMeta({ layout: 'user', middleware: 'auth-role' })
 
 onMounted(async () => {
-  const apiBase = import.meta.env.VITE_API_BASE || 'http://localhost:8090'
-  const token = localStorage.getItem('token')
-  const userId = localStorage.getItem('userId')
-  if (!userId) return // Evita request si no hay id
-  try {
-    const res = await axios.get(`${apiBase}/users/${userId}/tasks?limit=5`, {
-      headers: { Authorization: `Bearer ${token}` }
-    })
-    tasks.value = res.data?.tasks || []
-  } catch (e) {
-    tasks.value = []
-  }
+  tasks.value = await getTasks()
+  if (tasks.value.length > 5) tasks.value = tasks.value.slice(0, 5)
 })
 </script>

@@ -4,8 +4,14 @@ import type { Task, FilterDTO } from '~/types/types'
 const apiBase = import.meta.env.VITE_API_BASE || '/'
 
 export async function getTasks(): Promise<Task[]> {
-  const res = await axios.get<Task[]>(`${apiBase}/tasks`)
-  return res.data
+  const userId = localStorage.getItem('userId')
+  const token = localStorage.getItem('token')
+  if (!userId || !token) return []
+  const res = await axios.get(`${apiBase}/users/${userId}/tasks`, {
+    headers: { Authorization: `Bearer ${token}` }
+  })
+  // El backend debería retornar {tasks: [...]}, ajusta si es solo array
+  return res.data.tasks || res.data
 }
 
 export async function getTaskById(id: number): Promise<Task> {
