@@ -17,10 +17,6 @@
         </div>
       </div>
       <div class="bg-white rounded-lg shadow p-4">
-        <h3 class="text-lg font-semibold mb-2 flex items-center gap-1">📍 Sectores asignados</h3>
-        <UserSectors />
-      </div>
-      <div class="bg-white rounded-lg shadow p-4">
         <h3 class="text-lg font-semibold mb-2 flex items-center gap-1">📊 Estadísticas rápidas</h3>
         <UserStats />
       </div>

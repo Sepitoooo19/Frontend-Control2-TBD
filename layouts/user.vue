@@ -7,6 +7,7 @@
           <li><NuxtLink to="/home-user" class="hover:underline">Inicio</NuxtLink></li>
           <li><NuxtLink to="/profile" class="hover:underline">Mi Perfil</NuxtLink></li>
           <li><NuxtLink to="/tasks" class="hover:underline">Tareas</NuxtLink></li>
+          <li><NuxtLink to="/tasks/create" class="hover:underline">Crear Tarea</NuxtLink></li>
           <li><NuxtLink to="/statics" class="hover:underline">Estadísticas</NuxtLink></li>
           <li><NuxtLink to="/reports" class="hover:underline">Reportes</NuxtLink></li>
           <li>
