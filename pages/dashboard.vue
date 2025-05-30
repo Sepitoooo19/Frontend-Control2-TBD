@@ -30,19 +30,28 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { useUserStore } from '~/stores/auth'
 import TaskList from '~/components/tasks/TaskList.vue'
 import UserSectors from '~/components/users/UserSectors.vue'
 import UserStats from '~/components/users/UserStats.vue'
 import { getTasks } from '~/services/taskService'
+import type { Task } from '~/types/types'
 
 const userStore = useUserStore()
+const router = useRouter()
 const userName = userStore.userName || 'Usuario'
-const tasks = ref([])
+const tasks = ref<Task[]>([]) // <-- Tipo explícito
 
 definePageMeta({ layout: 'user', middleware: 'auth-role' })
 
 onMounted(async () => {
+  // Verifica sesión válida
+  const userId = localStorage.getItem('userId')
+  if (!userId) {
+    router.push('/login')
+    return
+  }
   tasks.value = await getTasks()
   if (tasks.value.length > 5) tasks.value = tasks.value.slice(0, 5)
 })

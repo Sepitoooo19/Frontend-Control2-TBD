@@ -14,6 +14,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import TaskList from '~/components/tasks/TaskList.vue'
 import { getTasks } from '~/services/taskService'
 import type { Task } from '~/types/types'
@@ -24,10 +25,16 @@ definePageMeta({
 })
 
 const tasks = ref<Task[]>([])
+const router = useRouter()
 
 const loadTasks = async () => {
+  // Verifica sesión válida
+  const userId = localStorage.getItem('userId')
+  if (!userId) {
+    router.push('/login')
+    return
+  }
   tasks.value = await getTasks()
-  if (tasks.value.length > 5) tasks.value = tasks.value.slice(0, 5)
 }
 
 onMounted(loadTasks)

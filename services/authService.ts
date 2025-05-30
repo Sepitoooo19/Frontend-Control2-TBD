@@ -12,9 +12,15 @@ export async function register(data: {
   const res = await axios.post(`${apiBase}/auth/register`, data)
   return res.data
 }
-
 export async function login(credentials: { username: string, password: string }) {
   const res = await axios.post(`${apiBase}/auth/login`, credentials)
+  const { token, id } = res.data
+  if (token) {
+    localStorage.setItem('token', token)
+  }
+  if (id) {
+    localStorage.setItem('userId', id.toString())
+  }
   return res.data
 }
 

@@ -54,10 +54,7 @@ import { updatePassword as updateUserPassword } from '~/services/authService';
 import type { User } from '~/types/types';
 import { useUserStore } from '~/stores/auth';
 
-definePageMeta({
-  layout: 'default',
-  middleware: 'auth-role'
-});
+definePageMeta({ layout: 'user', middleware: 'auth-role' })
 
 const user = ref<User | null>(null);
 const editableProfile = reactive({

@@ -5,9 +5,10 @@
         <h1 class="text-2xl font-bold">Usuario - Gestor de Tareas</h1>
         <ul class="flex space-x-4">
           <li><NuxtLink to="/home-user" class="hover:underline">Inicio</NuxtLink></li>
+          <li><NuxtLink to="/profile" class="hover:underline">Mi Perfil</NuxtLink></li>
           <li><NuxtLink to="/tasks" class="hover:underline">Tareas</NuxtLink></li>
-          <li><NuxtLink to="/sectors" class="hover:underline">Sectores</NuxtLink></li>
-          <li><NuxtLink to="/statistics" class="hover:underline">Estadísticas</NuxtLink></li>
+          <li><NuxtLink to="/statics" class="hover:underline">Estadísticas</NuxtLink></li>
+          <li><NuxtLink to="/reports" class="hover:underline">Reportes</NuxtLink></li>
           <li>
             <button @click="handleLogout" class="hover:underline">Cerrar Sesión</button>
           </li>

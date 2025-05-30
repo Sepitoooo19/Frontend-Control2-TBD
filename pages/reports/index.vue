@@ -17,3 +17,8 @@
     </div>
   </section>
 </template>
+
+<script setup lang="ts">  
+definePageMeta({ layout: 'user', middleware: 'auth-role' })
+
+</script>
