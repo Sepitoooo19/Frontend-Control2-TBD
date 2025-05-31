@@ -8,10 +8,10 @@
           <th class="py-3 px-4 text-left font-semibold text-blue-800">Descripción</th>
           <th class="py-3 px-4 text-left font-semibold text-blue-800">Vencimiento</th>
           <th class="py-3 px-4 text-left font-semibold text-blue-800">Estado</th>
-          <th class="py-3 px-4 text-left font-semibold text-blue-800">Usuario</th>
+          <th v-if="isAdmin" class="py-3 px-4 text-left font-semibold text-blue-800">Usuario</th>
           <th class="py-3 px-4 text-left font-semibold text-blue-800">Sector</th>
           <th class="py-3 px-4 text-left font-semibold text-blue-800">Ubicación</th>
-          <th v-if="showAdminActions">Acciones</th>
+          <th class="py-3 px-4 text-left font-semibold text-blue-800">Acciones</th>
         </tr>
       </thead>
       <tbody>
@@ -24,21 +24,23 @@
             <span
               :class="task.status === 'COMPLETED'
                 ? 'bg-green-100 text-green-700 px-2 py-1 rounded'
-                : 'bg-yellow-100 text-yellow-700 px-2 py-1 rounded'"
+                : task.status === 'IN_PROGRESS'
+                  ? 'bg-yellow-100 text-yellow-700 px-2 py-1 rounded'
+                  : 'bg-yellow-100 text-yellow-700 px-2 py-1 rounded'"
             >
               {{ task.status }}
             </span>
           </td>
-          <td class="py-2 px-4">{{ task.userId }}</td>
+          <td v-if="isAdmin" class="py-2 px-4">{{ task.userId }}</td>
           <td class="py-2 px-4">{{ task.sectorId }}</td>
           <td class="py-2 px-4 font-mono text-xs text-gray-700">{{ task.location }}</td>
-          <td v-if="showAdminActions" class="py-2 px-4 flex gap-2">
+          <td class="py-2 px-4 flex gap-2">
             <AppButton size="sm" variant="secondary" @click="goToEdit(task.id)">Editar</AppButton>
             <AppButton size="sm" variant="danger" @click="handleDelete(task.id)">Eliminar</AppButton>
           </td>
         </tr>
         <tr v-if="!localTasks.length">
-          <td colspan="9" class="py-8 text-center text-gray-400">No hay tareas para mostrar.</td>
+          <td :colspan="isAdmin ? 9 : 8" class="py-8 text-center text-gray-400">No hay tareas para mostrar.</td>
         </tr>
       </tbody>
     </table>
@@ -51,9 +53,6 @@ import { useRouter } from 'vue-router'
 import type { Task } from '~/types/types'
 import AppButton from '~/components/common/AppButton.vue'
 import { deleteTask } from '~/services/taskService'
-import { useUserStore } from '~/stores/auth'
-
-const userStore = useUserStore()
 
 const props = defineProps<{ tasks: Task[]; isAdmin?: boolean }>()
 const emit = defineEmits(['deleted'])
@@ -68,7 +67,7 @@ watch(
   }
 )
 
-const showAdminActions = computed(() => props.isAdmin ?? userStore.isAdmin)
+const isAdmin = computed(() => props.isAdmin)
 
 const goToEdit = (taskId: number) => {
   router.push(`/tasks/${taskId}/edit`)

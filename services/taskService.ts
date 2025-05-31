@@ -146,20 +146,21 @@ export async function getAllTasks(): Promise<Task[]> {
 export async function getMyTasks(): Promise<Task[]> {
   const config = useRuntimeConfig()
   const token = localStorage.getItem('token')
-  
-  if (!token) {
-    console.log('No hay token disponible')
+  const userId = localStorage.getItem('userId')
+
+  if (!token || !userId) {
+    console.log('No hay token o userId disponible')
     return []
   }
-  
+
   try {
-    // Usar el endpoint que ya funciona para obtener todas las tareas
-    const res = await $fetch('/tasks', {
+    // Usar el endpoint para obtener las tareas del usuario por su ID
+    const res = await $fetch(`/users/${userId}/tasks`, {
       baseURL: config.public.apiBase,
       method: 'GET',
       headers: { Authorization: `Bearer ${token}` }
     })
-    
+
     console.log('Respuesta del servidor:', res)
     return extractTasks(res)
   } catch (error) {
