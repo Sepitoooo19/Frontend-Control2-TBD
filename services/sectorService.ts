@@ -1,29 +1,53 @@
-import axios from 'axios'
 import type { Sector } from '~/types/types'
 
-const apiBase = import.meta.env.VITE_API_BASE || '/'
-
 export async function getSectors(): Promise<Sector[]> {
-  const res = await axios.get<Sector[]>(`${apiBase}/sectors`)
-  return res.data
+  const config = useRuntimeConfig()
+  
+  const res = await $fetch<Sector[]>('/sectors', {
+    baseURL: config.public.apiBase,
+    method: 'GET'
+  })
+  return res
 }
 
 export async function getSectorById(id: number): Promise<Sector> {
-  const res = await axios.get<Sector>(`${apiBase}/sectors/${id}`)
-  return res.data
+  const config = useRuntimeConfig()
+  
+  const res = await $fetch<Sector>(`/sectors/${id}`, {
+    baseURL: config.public.apiBase,
+    method: 'GET'
+  })
+  return res
 }
 
 export async function createSector(sector: Omit<Sector, 'id'>): Promise<Sector> {
-  const res = await axios.post<Sector>(`${apiBase}/sectors`, sector)
-  return res.data
+  const config = useRuntimeConfig()
+  
+  const res = await $fetch<Sector>('/sectors', {
+    baseURL: config.public.apiBase,
+    method: 'POST',
+    body: sector
+  })
+  return res
 }
 
 export async function updateSector(id: number, sector: Omit<Sector, 'id'>): Promise<Sector> {
-  const res = await axios.put<Sector>(`${apiBase}/sectors/${id}`, sector)
-  return res.data
+  const config = useRuntimeConfig()
+  
+  const res = await $fetch<Sector>(`/sectors/${id}`, {
+    baseURL: config.public.apiBase,
+    method: 'PUT',
+    body: sector
+  })
+  return res
 }
 
 export async function deleteSector(id: number): Promise<{ success: boolean; message: string }> {
-  const res = await axios.delete(`${apiBase}/sectors/${id}`)
-  return res.data
+  const config = useRuntimeConfig()
+  
+  const res = await $fetch<{ success: boolean; message: string }>(`/sectors/${id}`, {
+    baseURL: config.public.apiBase,
+    method: 'DELETE'
+  })
+  return res
 }

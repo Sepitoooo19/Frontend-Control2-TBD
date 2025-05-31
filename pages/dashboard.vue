@@ -31,7 +31,7 @@ import { useUserStore } from '~/stores/auth'
 import TaskList from '~/components/tasks/TaskList.vue'
 import UserSectors from '~/components/users/UserSectors.vue'
 import UserStats from '~/components/users/UserStats.vue'
-import { getTasks } from '~/services/taskService'
+import { getMyTasks } from '~/services/taskService'
 import type { Task } from '~/types/types'
 
 const userStore = useUserStore()
@@ -48,7 +48,7 @@ onMounted(async () => {
     router.push('/login')
     return
   }
-  tasks.value = await getTasks()
+  tasks.value = await getMyTasks()
   if (tasks.value.length > 5) tasks.value = tasks.value.slice(0, 5)
 })
 </script>

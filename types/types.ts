@@ -19,11 +19,11 @@ export interface Task {
   id: number;
   title: string;
   description: string;
-  dueDate: string;
-  status: "PENDING" | "COMPLETED";
+  dueDate: string | null;
+  status: "PENDING" | "COMPLETED" | "IN_PROGRESS";
   userId: number;
-  sectorId: number;
-  location: string; // WKT
+  sectorId: number | null;
+  location: string | null; // Permitir null
   createdAt: string;
 }
 

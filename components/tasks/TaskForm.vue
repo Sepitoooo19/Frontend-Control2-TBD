@@ -1,104 +1,240 @@
+<template>
+  <form @submit.prevent="handleSubmit" class="space-y-4">
+    <div>
+      <label for="title" class="block text-sm font-medium text-gray-700">Título</label>
+      <input
+        id="title"
+        v-model="form.title"
+        type="text"
+        required
+        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+      />
+    </div>
+
+    <div>
+      <label for="description" class="block text-sm font-medium text-gray-700">Descripción</label>
+      <textarea
+        id="description"
+        v-model="form.description"
+        rows="3"
+        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+      ></textarea>
+    </div>
+
+    <div>
+      <label for="dueDate" class="block text-sm font-medium text-gray-700">Fecha y hora límite</label>
+      <input
+        id="dueDate"
+        v-model="form.dueDate"
+        type="datetime-local"
+        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+      />
+    </div>
+
+    <div>
+      <label for="sectorId" class="block text-sm font-medium text-gray-700">Sector</label>
+      <select
+        id="sectorId"
+        v-model="form.sectorId"
+        required
+        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+      >
+        <option value="">Seleccionar sector</option>
+        <option v-for="sector in sectors" :key="sector.id" :value="sector.id">
+          {{ sector.name }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Campos separados para latitud y longitud para facilitar la entrada -->
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <label for="latitude" class="block text-sm font-medium text-gray-700">Latitud</label>
+        <input
+          id="latitude"
+          v-model.number="form.latitude"
+          type="number"
+          step="any"
+          class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+        />
+      </div>
+
+      <div>
+        <label for="longitude" class="block text-sm font-medium text-gray-700">Longitud</label>
+        <input
+          id="longitude"
+          v-model.number="form.longitude"
+          type="number"
+          step="any"
+          class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+        />
+      </div>
+    </div>
+
+    <div v-if="isEditing">
+      <label for="status" class="block text-sm font-medium text-gray-700">Estado</label>
+      <select
+        id="status"
+        v-model="form.status"
+        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+      >
+        <option value="PENDING">Pendiente</option>
+        <option value="IN_PROGRESS">En Progreso</option>
+        <option value="COMPLETED">Completada</option>
+      </select>
+    </div>
+
+    <div class="flex space-x-4">
+      <button
+        type="submit"
+        :disabled="loading"
+        class="flex-1 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 disabled:opacity-50"
+      >
+        {{ loading ? 'Guardando...' : (isEditing ? 'Actualizar Tarea' : 'Crear Tarea') }}
+      </button>
+      
+      <button
+        type="button"
+        @click="$emit('cancel')"
+        class="flex-1 bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+      >
+        Cancelar
+      </button>
+    </div>
+  </form>
+</template>
+
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import type { Task, Sector } from '~/types/types'
-import { createTask, updateTask, getTaskById } from '~/services/taskService'
+import { ref, reactive, onMounted, computed } from 'vue'
+import { getTaskById, createTask, updateTask } from '~/services/taskService'
 import { getSectors } from '~/services/sectorService'
-import { latLngToWKT, wktToLatLng } from '~/utils/wktUtils'
-import AppInput from '~/components/common/AppInput.vue'
-import AppButton from '~/components/common/AppButton.vue'
+import type { Task, Sector } from '~/types/types'
 
-const props = defineProps<{ taskId?: number }>()
-const emit = defineEmits(['saved'])
-const sectors = ref<Sector[]>([])
-const form = ref<Partial<Omit<Task, 'id' | 'createdAt' | 'status' | 'userId'>>>({ title: '', description: '', dueDate: '', sectorId: undefined, location: '' })
-const lat = ref('')
-const lng = ref('')
+const props = defineProps<{
+  taskId?: number
+}>()
+
+const emit = defineEmits<{
+  saved: []
+  cancel: []
+}>()
+
 const loading = ref(false)
-const error = ref('')
-const isEditMode = ref(false)
+const sectors = ref<Sector[]>([])
 
-function formatForDateTimeLocal(dt: string | undefined) {
-  // Espera dt en formato "2025-06-15T14:30:00"
-  return dt ? dt.substring(0, 16) : ''
-}
-
-onMounted(async () => {
-  sectors.value = await getSectors()
-  if (props.taskId) {
-    isEditMode.value = true
-    const task = await getTaskById(props.taskId)
-    form.value = { 
-      title: task.title,
-      description: task.description,
-      dueDate: formatForDateTimeLocal(task.dueDate),
-      sectorId: task.sectorId,
-      location: task.location
-    }
-    const coords = wktToLatLng(task.location)
-    lat.value = coords?.lat?.toString() ?? ''
-    lng.value = coords?.lng?.toString() ?? ''
-  }
+const taskId = computed(() => {
+  return props.taskId && !isNaN(Number(props.taskId)) ? Number(props.taskId) : null
 })
 
-const handleSubmit = async () => {
-  error.value = ''
-  if (!lat.value || !lng.value || form.value.sectorId === undefined) {
-    error.value = 'Debes ingresar todos los campos obligatorios.'
-    return
-  }
+const isEditing = computed(() => taskId.value !== null)
 
-  let dueDate = form.value.dueDate || ''
-  // Si viene "YYYY-MM-DDTHH:mm", añade ":00"
-  if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(dueDate)) {
-    dueDate = dueDate + ':00'
-  } else if (/^\d{4}-\d{2}-\d{2}$/.test(dueDate)) {
-    dueDate = dueDate + 'T00:00:00'
-  }
+const form = reactive({
+  title: '',
+  description: '',
+  dueDate: '',
+  sectorId: '',
+  latitude: null as number | null,
+  longitude: null as number | null,
+  status: 'PENDING' as Task['status']
+})
 
-  const finalTask: Omit<Task, 'id' | 'createdAt' | 'status' | 'userId'> = {
-    title: form.value.title || '',
-    description: form.value.description || '',
-    dueDate: dueDate,
-    sectorId: Number(form.value.sectorId),
-    location: latLngToWKT(Number(lat.value), Number(lng.value)),
-  }
-  loading.value = true
-  try {
-    if (isEditMode.value && props.taskId) {
-      await updateTask(props.taskId, finalTask)
-    } else {
-      await createTask(finalTask)
+// Función para convertir WKT POINT a lat/lng
+const parseLocationFromWKT = (wkt: string) => {
+  // Formato: "POINT(longitude latitude)"
+  const match = wkt.match(/POINT\(([^)]+)\)/)
+  if (match) {
+    const coords = match[1].split(' ')
+    return {
+      longitude: parseFloat(coords[0]),
+      latitude: parseFloat(coords[1])
     }
-    emit('saved')
-  } catch (e) {
-    error.value = 'Error al guardar la tarea'
+  }
+  return { longitude: null, latitude: null }
+}
+
+// Función para crear WKT POINT desde lat/lng
+const createWKTFromCoords = (latitude: number, longitude: number): string => {
+  return `POINT(${longitude} ${latitude})`
+}
+
+const loadSectors = async () => {
+  try {
+    sectors.value = await getSectors()
+  } catch (error) {
+    console.error('Error cargando sectores:', error)
+  }
+}
+
+const loadTask = async () => {
+  if (!taskId.value) return
+  
+  try {
+    loading.value = true
+    console.log('Cargando tarea con ID:', taskId.value)
+    
+    const task = await getTaskById(taskId.value)
+    console.log('Tarea cargada:', task)
+    
+    // Llenar el formulario
+    form.title = task.title || ''
+    form.description = task.description || ''
+    form.dueDate = task.dueDate ? new Date(task.dueDate).toISOString().slice(0, 16) : ''
+    form.sectorId = task.sectorId?.toString() || ''
+    form.status = task.status || 'PENDING'
+    
+    // Parsear location WKT a lat/lng
+    if (task.location) {
+      const coords = parseLocationFromWKT(task.location)
+      form.latitude = coords.latitude
+      form.longitude = coords.longitude
+    }
+    
+  } catch (error) {
+    console.error('Error cargando tarea:', error)
   } finally {
     loading.value = false
   }
 }
-</script>
 
-<template>
-  <form @submit.prevent="handleSubmit" class="max-w-lg mx-auto bg-white p-6 rounded-xl shadow space-y-4">
-    <AppInput label="Título" v-model="form.title" required />
-    <AppInput label="Descripción" v-model="form.description" required />
-    <AppInput label="Fecha y hora límite" type="datetime-local" v-model="form.dueDate" required />
-    <div>
-      <label class="block mb-1 font-medium text-gray-700">Sector</label>
-      <select v-model="form.sectorId" class="w-full rounded-lg border px-4 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-300">
-        <option disabled value="">Seleccione un sector</option>
-        <option v-for="sector in sectors" :value="sector.id" :key="sector.id">{{ sector.name }}</option>
-      </select>
-    </div>
-    <div class="flex gap-2">
-      <AppInput label="Latitud" v-model="lat" type="number" step="any" required />
-      <AppInput label="Longitud" v-model="lng" type="number" step="any" required />
-    </div>
-    <div class="flex justify-end gap-2">
-      <AppButton type="submit" :loading="loading" variant="primary">
-        {{ isEditMode ? 'Actualizar' : 'Guardar' }} Tarea
-      </AppButton>
-    </div>
-    <p v-if="error" class="text-red-500">{{ error }}</p>
-  </form>
-</template>
+const handleSubmit = async () => {
+  try {
+    loading.value = true
+    
+    // Crear location WKT si tenemos coordenadas
+    let location: string | null = null
+    if (form.latitude !== null && form.longitude !== null) {
+      location = createWKTFromCoords(form.latitude, form.longitude)
+    }
+    
+    const taskData = {
+      title: form.title,
+      description: form.description,
+      dueDate: form.dueDate || null,
+      sectorId: form.sectorId ? Number(form.sectorId) : null,
+      location: location,
+      ...(isEditing.value && { status: form.status })
+    }
+    
+    if (isEditing.value && taskId.value) {
+      console.log('Actualizando tarea:', taskId.value, taskData)
+      await updateTask(taskId.value, taskData)
+    } else {
+      console.log('Creando nueva tarea:', taskData)
+      await createTask(taskData)
+    }
+    
+    emit('saved')
+    
+  } catch (error) {
+    console.error('Error guardando tarea:', error)
+  } finally {
+    loading.value = false
+  }
+}
+onMounted(async () => {
+  await loadSectors()
+  if (isEditing.value) {
+    await loadTask()
+  }
+})
+</script>
