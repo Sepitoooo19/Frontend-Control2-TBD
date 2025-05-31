@@ -1,6 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap');
+
 
 :root{
   color-scheme: light;
@@ -30,10 +32,16 @@ svg {
   height: auto;
   max-width: 100%;
 }
+
 body {
+  background: linear-gradient(135deg, #a8e6cf, #dcedc1);
+  font-family: 'Montserrat', sans-serif;
+  min-height: 100vh;
   margin: 0;
-  min-height: 100dvh;
-  overflow: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -42,19 +50,38 @@ h1, h2, h3, h4, h5, h6 {
 p {
   text-wrap: pretty;
 }
-h1 { font-size: 2.2rem; }
+h1 { font-size: 2.5rem; }
 h2 { font-size: 2rem; }
 h3 { font-size: 1.8rem; }
 label { font-size: 1.5rem; }
 
-@layer components{
-  input{
-    @apply w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary;
+@layer components {
+  input {
+    @apply w-full px-4 py-3 border border-gray-300 rounded-2xl text-gray-700 placeholder-gray-400 bg-white shadow-sm;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
   }
-  select{
-    @apply w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary appearance-none;
+  input:focus {
+    @apply ring-2 ring-purple-300 shadow-md outline-none;
   }
+  button {
+    @apply bg-purple-300 text-purple-900 font-semibold py-3 rounded-xl shadow cursor-pointer;
+    box-shadow: 0 3px 6px rgba(120, 83, 200, 0.4);
+    transition: all 0.3s ease;
+  }
+  button:hover {
+    @apply bg-purple-400 text-white;
+  }
+  button:disabled {
+    @apply bg-purple-200 cursor-not-allowed text-purple-500 shadow-none;
+  }
+label {
+  @apply mb-2 block font-semibold text-gray-700;
 }
+
+
+}
+
 
 .fade-out {
   animation: fadeOut 0.21s ease-in-out;
@@ -70,3 +97,25 @@ label { font-size: 1.5rem; }
     opacity: 0;
   }
 }
+
+h2 {
+  font-weight: 700;
+  color: #6b41cb; 
+  letter-spacing: 0.05em;
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+a {
+  color: #805dc6;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: #5d2ec3;
+  text-decoration: underline;
+}
+

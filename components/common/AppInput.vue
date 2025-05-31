@@ -1,6 +1,6 @@
 <template>
-  <div class="mb-4">
-    <label v-if="label" :for="id" class="block mb-1 font-medium text-gray-700">{{ label }}</label>
+  <div class="mb-6 w-full max-w-md mx-auto">
+    <label v-if="label" :for="id" class="block mb-1 font-medium text-gray-700 ">{{ label }}</label>
     <input
       :id="id"
       v-bind="$attrs"

@@ -1,13 +1,13 @@
 <template>
-  <div class="max-w-md w-full mx-auto bg-white p-8 rounded-xl shadow-lg mt-10">
+  <div class="max-w-md w-full bg-white bg-opacity-90 p-10 rounded-3xl shadow-lg">
     <h2 class="text-2xl font-bold mb-6 text-center text-blue-700">Iniciar Sesión</h2>
     <form @submit.prevent="handleLogin" class="space-y-4">
       <AppInput label="Usuario" v-model="username" required />
       <AppInput label="Contraseña" type="password" v-model="password" required />
       <AppButton type="submit" class="w-full" :loading="loading">Ingresar</AppButton>
       <p v-if="loginError" class="text-red-500 text-center">{{ loginError }}</p>
-      <div class="text-center mt-3">
-        <NuxtLink to="/register" class="text-blue-600 hover:underline">¿No tienes cuenta? Regístrate aquí</NuxtLink>
+      <div class="text-center mt-6">
+        <NuxtLink to="/register" class="text-purple-600 hover:underline font-semibold">¿No tienes cuenta? Regístrate aquí</NuxtLink>
       </div>
     </form>
   </div>
@@ -46,3 +46,4 @@ const handleLogin = async () => {
   }
 }
 </script>
+
