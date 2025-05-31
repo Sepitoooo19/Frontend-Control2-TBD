@@ -1,41 +1,61 @@
 <template>
-  <div class="flex flex-col min-h-screen">
-    <header class="bg-red-600 text-white py-4 w-full shadow">
-      <div class="flex justify-between items-center px-4">
+  <div class="flex flex-col min-h-screen bg-gray-100">
+    <header class="fixed top-0 left-0 w-full z-50 bg-red-600 text-white py-4 shadow-md">
+      <div class="container mx-auto flex flex-row items-center justify-between px-4 sm:px-6 lg:px-8">
+        
         <h1 class="text-2xl font-bold">Admin - Gestor de Tareas</h1>
-        <ul class="flex space-x-4">
-          <li><NuxtLink to="/admin/dashboard" class="hover:underline">Dashboard</NuxtLink></li>
-          <li><NuxtLink to="/admin/users" class="hover:underline">Usuarios</NuxtLink></li>
-          <li><NuxtLink to="/admin/tasks" class="hover:underline">Tareas</NuxtLink></li>
-          <li><NuxtLink to="/admin/sectors" class="hover:underline">Sectores</NuxtLink></li>
-          <li><NuxtLink to="/admin/reports" class="hover:underline">Reportes</NuxtLink></li>
+        
+        <ul class="flex flex-row items-center space-x-4">
+          <li><NuxtLink to="/admin/dashboard" class="hover:text-red-200 transition-colors">Dashboard</NuxtLink></li>
+          <li><NuxtLink to="/admin/users" class="hover:text-red-200 transition-colors">Usuarios</NuxtLink></li>
+          <li><NuxtLink to="/admin/tasks" class="hover:text-red-200 transition-colors">Tareas</NuxtLink></li>
+          <li><NuxtLink to="/admin/sectors" class="hover:text-red-200 transition-colors">Sectores</NuxtLink></li>
+          <li><NuxtLink to="/admin/reports" class="hover:text-red-200 transition-colors">Reportes</NuxtLink></li>
           <li>
-            <button @click="handleLogout" class="hover:underline">Cerrar Sesión</button>
+            <button 
+              @click="handleLogout" 
+              class="bg-red-700 hover:bg-red-800 text-white font-semibold py-2 px-3 rounded transition-colors text-sm" 
+              aria-label="Cerrar Sesión"
+            >
+              Cerrar Sesión
+            </button>
           </li>
         </ul>
+
       </div>
     </header>
-    <main class="flex-grow container mx-auto py-8">
-      <slot />
-    </main>
-    <footer class="bg-gray-800 text-white py-4">
+
+    <main class="flex-grow w-full py-8 pt-24 px-4 sm:px-6 lg:px-8"> 
+      <div class="container mx-auto">
+        <slot />
+      </div>
+    </main> <footer class="bg-gray-800 text-white py-6 text-sm">
       <div class="container mx-auto text-center">
-        <p>&copy; {{ new Date().getFullYear() }} Admin - Gestor de Tareas</p>
+        <p>&copy; {{ new Date().getFullYear() }} Admin - Gestor de Tareas. Todos los derechos reservados.</p>
       </div>
     </footer>
   </div>
 </template>
+
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
-const router = useRouter()
+import { useRouter } from 'vue-router'; // Correcto para Nuxt 3
+
+const router = useRouter();
+
 const handleLogout = () => {
-  localStorage.removeItem('token')
-  router.push('/login')
-}
+  localStorage.removeItem('token');
+  localStorage.removeItem('role');
+  localStorage.removeItem('userId');
+  localStorage.removeItem('userName');
+  router.push('/login');
+};
 </script>
+
 <style scoped>
-header ul {
-  display: flex;
-  gap: 1rem;
+/* Estilo para el enlace activo en el header */
+.router-link-active, .router-link-exact-active {
+  font-weight: bold;
+  color: #fecaca; /* Rojo claro para el link activo, por ejemplo */
 }
+
 </style>
