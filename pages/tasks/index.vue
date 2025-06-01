@@ -12,7 +12,7 @@
     <div v-if="loading" class="text-center py-8">
       Cargando tareas...
     </div>
-    <TaskList
+    <TaskListUser
       v-else
       :tasks="tasks"
       @deleted="loadTasks"
@@ -22,7 +22,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import TaskList from '~/components/tasks/TaskList.vue'
+import TaskListUser from '~/components/tasks/TaskListUser.vue'
 import { getMyTasks } from '~/services/taskService'
 import type { Task } from '~/types/types'
 

@@ -118,17 +118,19 @@ export async function getTasksByStatus(status: Task['status']): Promise<Task[]> 
   return extractTasks(res)
 }
 
-export async function filterTasks(filter: FilterDTO): Promise<Task[]> {
+export async function filterTasks({ status, word }: { status?: string; word?: string }): Promise<Task[]> {
   const config = useRuntimeConfig()
   const token = localStorage.getItem('token')
-  const userId = localStorage.getItem('userId')
-  if (!userId || !token) return []
+
+  // Construye la query string
+  const params = new URLSearchParams()
+  if (status) params.append('status', status)
+  if (word) params.append('word', word)
   
-  const res = await $fetch(`/users/${userId}/tasks/filter`, {
+  const res = await $fetch(`/tasks/filtro?${params.toString()}`, {
     baseURL: config.public.apiBase,
-    method: 'POST',
-    headers: { Authorization: `Bearer ${token}` },
-    body: filter
+    method: 'GET',
+    headers: { Authorization: `Bearer ${token}` }
   })
   return extractTasks(res)
 }
@@ -144,27 +146,26 @@ export async function getAllTasks(): Promise<Task[]> {
 }
 
 export async function getMyTasks(): Promise<Task[]> {
-  const config = useRuntimeConfig()
-  const token = localStorage.getItem('token')
-  const userId = localStorage.getItem('userId')
+  const config = useRuntimeConfig();
+  const token = localStorage.getItem('token');
 
-  if (!token || !userId) {
-    console.log('No hay token o userId disponible')
-    return []
+  if (!token) {
+    console.log('No hay token disponible');
+    return [];
   }
 
   try {
-    // Usar el endpoint para obtener las tareas del usuario por su ID
-    const res = await $fetch(`/users/${userId}/tasks`, {
+    // Llama al nuevo endpoint
+    const res = await $fetch('/tasks/my-tasks', {
       baseURL: config.public.apiBase,
       method: 'GET',
-      headers: { Authorization: `Bearer ${token}` }
-    })
+      headers: { Authorization: `Bearer ${token}` },
+    });
 
-    console.log('Respuesta del servidor:', res)
-    return extractTasks(res)
+    console.log('Respuesta del servidor:', res);
+    return extractTasks(res);
   } catch (error) {
-    console.error('Error obteniendo tareas:', error)
-    return []
+    console.error('Error obteniendo tareas:', error);
+    return [];
   }
 }

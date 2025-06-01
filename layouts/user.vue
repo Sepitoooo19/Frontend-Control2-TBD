@@ -25,7 +25,7 @@
       </div>
     </header>
 
-    <main class="flex-grow w-full py-8 pt-24 px-4 sm:px-6 lg:px-8"> 
+    <main class="flex-grow w-full pt-24 pb-8 px-4 sm:px-6 lg:px-8">
       <div class="container mx-auto"> <slot />
       </div>
     </main> 

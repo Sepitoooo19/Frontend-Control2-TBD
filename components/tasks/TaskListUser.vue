@@ -103,7 +103,7 @@ const resetFilter = () => {
 }
 
 const goToEdit = (taskId: number) => {
-  router.push(`/tasks/${taskId}/edit`)
+  router.push(`/tasks/${taskId}/editUser`)
 }
 
 const handleDelete = async (taskId: number) => {
@@ -119,13 +119,15 @@ const handleDelete = async (taskId: number) => {
 }
 
 const handleComplete = async (taskId: number) => {
+  const idx = localTasks.value.findIndex(t => t.id === taskId)
+  if (idx === -1) return
+
+  const task = localTasks.value[idx]
+  const updatedTask = { ...task, status: 'COMPLETED' as 'COMPLETED' }
   try {
-    await updateTask(taskId, { status: 'COMPLETED' })
-    const idx = localTasks.value.findIndex(t => t.id === taskId)
-    if (idx !== -1) {
-      localTasks.value[idx].status = 'COMPLETED'
-      emit('completed', taskId)
-    }
+    await updateTask(taskId, updatedTask)
+    localTasks.value[idx].status = 'COMPLETED'
+    emit('completed', taskId)
   } catch (e) {
     alert('Error al completar la tarea')
   }
