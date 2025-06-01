@@ -1,3 +1,4 @@
+
 import type { Task, FilterDTO } from '~/types/types'
 
 // Helper para extraer el array de tasks (permite ambos formatos)
@@ -127,12 +128,19 @@ export async function filterTasks({ status, word }: { status?: string; word?: st
   if (status) params.append('status', status)
   if (word) params.append('word', word)
   
+  console.log('🔗 URL completa:', `${config.public.apiBase}/tasks/filtro?${params.toString()}`)
+  
   const res = await $fetch(`/tasks/filtro?${params.toString()}`, {
     baseURL: config.public.apiBase,
     method: 'GET',
     headers: { Authorization: `Bearer ${token}` }
   })
-  return extractTasks(res)
+  
+  console.log('📦 Respuesta raw del backend:', res)
+  const extractedTasks = extractTasks(res)
+  console.log('📋 Tareas extraídas:', extractedTasks)
+  
+  return extractedTasks
 }
 
 export async function getAllTasks(): Promise<Task[]> {
@@ -169,3 +177,4 @@ export async function getMyTasks(): Promise<Task[]> {
     return [];
   }
 }
+

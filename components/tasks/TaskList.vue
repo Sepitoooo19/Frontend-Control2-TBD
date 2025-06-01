@@ -96,8 +96,32 @@ watch(
 const isAdmin = computed(() => props.isAdmin)
 
 const applyFilter = async () => {
-  localTasks.value = await filterTasks({ status: filter.value.status, word: filter.value.word })
+  console.log('🔍 Aplicando filtro:', filter.value)
+  
+  if (!filter.value.status && !filter.value.word) {
+    localTasks.value = [...props.tasks]
+    return
+  }
+  
+  // Filtrado local como fallback
+  let filtered = [...props.tasks]
+  
+  if (filter.value.status) {
+    filtered = filtered.filter(task => task.status === filter.value.status)
+  }
+  
+  if (filter.value.word) {
+    const searchTerm = filter.value.word.toLowerCase()
+    filtered = filtered.filter(task => 
+      task.title.toLowerCase().includes(searchTerm) || 
+      task.description.toLowerCase().includes(searchTerm)
+    )
+  }
+  
+  localTasks.value = filtered
+  console.log('✅ Filtrado local aplicado:', filtered.length, 'tareas')
 }
+
 
 const resetFilter = () => {
   filter.value = { status: '', word: '' }
