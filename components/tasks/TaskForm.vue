@@ -1,4 +1,5 @@
 <template>
+  <div class="max-w-2xl mx-auto px-4 overflow-y-auto" :class="isEditing ? 'mt-60' : 'mt-40'">
   <form @submit.prevent="handleSubmit" class="space-y-4">
     <div>
       <label for="title" class="block text-sm font-medium text-gray-700">Título</label>
@@ -46,29 +47,15 @@
       </select>
     </div>
 
-    <!-- Campos separados para latitud y longitud para facilitar la entrada -->
-    <div class="grid grid-cols-2 gap-4">
-      <div>
-        <label for="latitude" class="block text-sm font-medium text-gray-700">Latitud</label>
-        <input
-          id="latitude"
-          v-model.number="form.latitude"
-          type="number"
-          step="any"
-          class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-        />
-      </div>
-
-      <div>
-        <label for="longitude" class="block text-sm font-medium text-gray-700">Longitud</label>
-        <input
-          id="longitude"
-          v-model.number="form.longitude"
-          type="number"
-          step="any"
-          class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-        />
-      </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Ubicación</label>
+      <p class="text-sm text-gray-500 mt-1 mb-2">Haz clic en el mapa para seleccionar la ubicación</p>
+      <MapPicker 
+        :lat="lat"
+        :lng="lng"
+        @update:lat="updateLat"
+        @update:lng="updateLng"
+      />
     </div>
 
     <div v-if="isEditing">
@@ -101,6 +88,7 @@
       </button>
     </div>
   </form>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -108,6 +96,8 @@ import { ref, reactive, onMounted, computed } from 'vue'
 import { getTaskById, createTask, updateTask } from '~/services/taskService'
 import { getSectors } from '~/services/sectorService'
 import type { Task, Sector } from '~/types/types'
+import { latLngToWKT } from '~/utils/wktUtils'
+import MapPicker from '~/components/common/MapPicker.vue'
 
 const props = defineProps<{
   taskId?: number
@@ -120,6 +110,8 @@ const emit = defineEmits<{
 
 const loading = ref(false)
 const sectors = ref<Sector[]>([])
+const lat = ref<number>(-33.459229) // Default latitude
+const lng = ref<number>(-70.645348) // Default longitude
 
 const taskId = computed(() => {
   return props.taskId && !isNaN(Number(props.taskId)) ? Number(props.taskId) : null
@@ -132,28 +124,15 @@ const form = reactive({
   description: '',
   dueDate: '',
   sectorId: '',
-  latitude: null as number | null,
-  longitude: null as number | null,
   status: 'PENDING' as Task['status']
 })
 
-// Función para convertir WKT POINT a lat/lng
-const parseLocationFromWKT = (wkt: string) => {
-  // Formato: "POINT(longitude latitude)"
-  const match = wkt.match(/POINT\(([^)]+)\)/)
-  if (match) {
-    const coords = match[1].split(' ')
-    return {
-      longitude: parseFloat(coords[0]),
-      latitude: parseFloat(coords[1])
-    }
-  }
-  return { longitude: null, latitude: null }
+const updateLat = (newLat: number) => {
+  lat.value = newLat
 }
 
-// Función para crear WKT POINT desde lat/lng
-const createWKTFromCoords = (latitude: number, longitude: number): string => {
-  return `POINT(${longitude} ${latitude})`
+const updateLng = (newLng: number) => {
+  lng.value = newLng
 }
 
 const loadSectors = async () => {
@@ -183,9 +162,12 @@ const loadTask = async () => {
     
     // Parsear location WKT a lat/lng
     if (task.location) {
-      const coords = parseLocationFromWKT(task.location)
-      form.latitude = coords.latitude
-      form.longitude = coords.longitude
+      const match = task.location.match(/POINT\(([^)]+)\)/)
+      if (match) {
+        const coords = match[1].split(' ')
+        lng.value = parseFloat(coords[0])
+        lat.value = parseFloat(coords[1])
+      }
     }
     
   } catch (error) {
@@ -199,18 +181,12 @@ const handleSubmit = async () => {
   try {
     loading.value = true
     
-    // Crear location WKT si tenemos coordenadas
-    let location: string | null = null
-    if (form.latitude !== null && form.longitude !== null) {
-      location = createWKTFromCoords(form.latitude, form.longitude)
-    }
-    
     const taskData = {
       title: form.title,
       description: form.description,
       dueDate: form.dueDate || null,
       sectorId: form.sectorId ? Number(form.sectorId) : null,
-      location: location,
+      location: latLngToWKT(lat.value, lng.value),
       ...(isEditing.value && { status: form.status })
     }
     
@@ -230,6 +206,7 @@ const handleSubmit = async () => {
     loading.value = false
   }
 }
+
 onMounted(async () => {
   await loadSectors()
   if (isEditing.value) {
