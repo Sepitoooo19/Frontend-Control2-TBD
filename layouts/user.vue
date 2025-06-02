@@ -1,10 +1,8 @@
 <template>
   <div class="flex flex-col min-h-screen bg-gray-100">
-    <header class="fixed top-0 left-0 w-full z-50 bg-blue-600 text-white py-4 shadow-md">
+    <header class="fixed top-0 left-0 w-full z-50 bg-blue-600 text-white h-16 flex items-center shadow-md">
       <div class="container mx-auto flex flex-row items-center justify-between px-4 sm:px-6 lg:px-8">
-        
         <h1 class="text-2xl font-bold">Usuario - Gestor de Tareas</h1>
-        
         <ul class="flex flex-row items-center space-x-4">
           <li><NuxtLink to="/home-user" class="hover:text-blue-200 transition-colors">Inicio</NuxtLink></li>
           <li><NuxtLink to="/profile" class="hover:text-blue-200 transition-colors">Mi Perfil</NuxtLink></li>
@@ -21,17 +19,17 @@
             </button>
           </li>
         </ul>
-
       </div>
     </header>
 
-    <main class="flex-grow w-full pt-24 pb-8">
-      <div class="mx-auto w-full max-w-[1800px] px-4 sm:px-6 lg:px-8 overflow-hidden">
+    <main class="flex-grow w-full pt-16 pb-8">
+      <div class="mx-auto w-full max-w-[1800px] px-4 sm:px-6 lg:px-8">
         <slot />
       </div>
     </main>
     
-    <footer class="bg-gray-800 text-white py-6 text-sm mt-auto"> <div class="container mx-auto text-center">
+    <footer class="bg-gray-800 text-white py-6 text-sm mt-auto">
+      <div class="container mx-auto text-center">
         <p>&copy; {{ new Date().getFullYear() }} Gestor de Tareas. Todos los derechos reservados.</p>
       </div>
     </footer>
@@ -48,20 +46,13 @@ const handleLogout = () => {
   localStorage.removeItem('role');
   localStorage.removeItem('userId');
   localStorage.removeItem('userName');
-  router.push('/login'); // Redirige al login después de cerrar sesión
+  router.push('/login');
 };
 </script>
 
 <style scoped>
-/* Estilo para el enlace activo en el header */
 .router-link-active, .router-link-exact-active {
   font-weight: bold;
-  color: #bfdbfe; /* Un azul claro para el link activo (Tailwind color blue-200) */
+  color: #bfdbfe;
 }
-
-html, body {
-  max-width: 100vw;
-  overflow-x: hidden;
-}
-
 </style>

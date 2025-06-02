@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col min-h-screen bg-gray-100">
-    <header class="fixed top-0 left-0 w-full z-50 bg-red-600 text-white py-4 shadow-md">
+    <header class="fixed top-0 left-0 w-full z-50 bg-red-600 text-white h-16 flex items-center shadow-md">
       <div class="container mx-auto flex flex-row items-center justify-between px-4 sm:px-6 lg:px-8">
         <h1 class="text-2xl font-bold">Admin - Gestor de Tareas</h1>
         <ul class="flex flex-row items-center space-x-4">
@@ -22,7 +22,7 @@
       </div>
     </header>
 
-    <main class="flex-grow w-full pt-24 pb-8 px-4 sm:px-6 lg:px-8">
+    <main class="flex-grow w-full pt-16 pb-8 px-4 sm:px-6 lg:px-8">
       <div class="container mx-auto">
         <slot />
       </div>
@@ -55,5 +55,4 @@ const handleLogout = () => {
   font-weight: bold;
   color: #fecaca;
 }
-
 </style>

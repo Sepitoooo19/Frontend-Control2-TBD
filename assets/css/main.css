@@ -32,17 +32,15 @@ svg {
   max-width: 100%;
 }
 
+/* Quitar display: flex, justify-content, align-items, padding del body */
 body {
   background: linear-gradient(135deg, #a8e6cf, #dcedc1);
   font-family: 'Montserrat', sans-serif;
   min-height: 100vh;
   margin: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 2rem;
 }
 
+/* ...el resto igual... */
 h1, h2, h3, h4, h5, h6 {
   text-wrap: balance;
 }
@@ -87,4 +85,9 @@ a {
 a:hover {
   color: #5d2ec3;
   text-decoration: underline;
+}
+
+.leaflet-container {
+  z-index: 10 !important;
+  position: relative !important;
 }

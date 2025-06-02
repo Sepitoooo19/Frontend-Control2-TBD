@@ -1,6 +1,6 @@
 <template>
   <div class="w-full">
-    <!-- Sección de Filtros (AÑADE ESTO) -->
+    <!-- Sección de Filtros -->
     <div class="flex flex-wrap gap-2 mb-4 p-4 bg-gray-50 rounded-lg">
       <select 
         v-model="filter.status" 
@@ -37,37 +37,32 @@
         Limpiar
       </AppButton>
     </div>
-
-    <!-- Contenedor principal modificado -->
     <div class="flex flex-col xl:flex-row gap-4 w-full">
-      <!-- Mapa - Versión responsiva -->
+      <!-- Mapa -->
       <div class="w-full xl:w-1/2 h-[400px] xl:h-[600px] rounded-lg border border-gray-200 shadow-md">
         <TaskMap :tasks="filteredTasks" class="w-full h-full" />
       </div>
-      
-      <!-- Tabla - Versión con scroll controlado -->
+      <!-- Tabla con scroll interno -->
       <div class="w-full xl:w-1/2">
-        <div class="overflow-x-auto rounded-lg border border-gray-200 shadow-md">
-          <table class="min-w-full divide-y divide-gray-200">
-            <!-- Cabecera de tabla -->
-            <thead class="bg-blue-50">
-              <tr>
-                <th class="px-4 py-3 text-left text-xs font-medium text-blue-800 uppercase tracking-wider whitespace-nowrap">ID</th>
-                <th class="px-4 py-3 text-left text-xs font-medium text-blue-800 uppercase tracking-wider">Título</th>
+        <div class="overflow-x-auto">
+          <div class="max-h-[500px] overflow-y-auto rounded-lg border border-gray-200 shadow-md">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-blue-50 sticky top-0 z-10">
+                <tr>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-blue-800 uppercase tracking-wider whitespace-nowrap">ID</th>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-blue-800 uppercase tracking-wider">Título</th>
                   <th class="py-3 px-4 text-left font-semibold text-blue-800 truncate max-w-[150px]">Descripción</th>
                   <th class="py-3 px-4 text-left font-semibold text-blue-800">Vencimiento</th>
                   <th class="py-3 px-4 text-left font-semibold text-blue-800">Estado</th>
-                  <th v-if="isAdmin" class="py-3 px-4 text-left font-semibold text-blue-800">Usuario</th>
                   <th class="py-3 px-4 text-left font-semibold text-blue-800">Sector</th>
                   <th class="py-3 px-4 text-left font-semibold text-blue-800 truncate max-w-[100px]">Ubicación</th>
                   <th class="py-3 px-4 text-left font-semibold text-blue-800">Acciones</th>
                 </tr>
               </thead>
-              
-            <tbody class="bg-white divide-y divide-gray-200">
-              <tr v-for="task in localTasks" :key="task.id">
-                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">{{ task.id }}</td>
-                <td class="px-4 py-3 text-sm text-gray-900 max-w-[150px] truncate">{{ task.title }}</td>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <tr v-for="task in localTasks" :key="task.id">
+                  <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">{{ task.id }}</td>
+                  <td class="px-4 py-3 text-sm text-gray-900 max-w-[150px] truncate">{{ task.title }}</td>
                   <td class="py-2 px-4 truncate max-w-[150px]">{{ task.description }}</td>
                   <td class="py-2 px-4 whitespace-nowrap">{{ formatDate(task.dueDate) }}</td>
                   <td class="py-2 px-4">
@@ -81,7 +76,6 @@
                       {{ task.status }}
                     </span>
                   </td>
-                  <td v-if="isAdmin" class="py-2 px-4">{{ task.userId }}</td>
                   <td class="py-2 px-4">{{ task.sectorId }}</td>
                   <td class="py-2 px-4 font-mono text-xs text-gray-700 truncate max-w-[100px]">{{ task.location }}</td>
                   <td class="py-2 px-4 flex gap-2 flex-wrap">
@@ -98,10 +92,11 @@
                   </td>
                 </tr>
                 <tr v-if="!localTasks.length">
-                  <td :colspan="isAdmin ? 9 : 8" class="py-8 text-center text-gray-400">No hay tareas para mostrar.</td>
-                              </tr>
-            </tbody>
-          </table>
+                  <td colspan="8" class="py-8 text-center text-gray-400">No hay tareas para mostrar.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
@@ -118,7 +113,6 @@ import TaskMap from '~/components/tasks/TaskMap.vue'
 
 const props = defineProps<{ 
   tasks: Task[]
-  isAdmin?: boolean 
 }>()
 
 const emit = defineEmits(['deleted', 'completed'])
@@ -130,7 +124,6 @@ const filter = ref({
 })
 const router = useRouter()
 
-// Función para formatear fechas
 const formatDate = (dateString: string | null) => {
   if (!dateString) return '-'
   const date = new Date(dateString)
@@ -156,8 +149,6 @@ watch(
     localTasks.value = [...newTasks]
   }
 )
-
-const isAdmin = computed(() => props.isAdmin || false)
 
 const applyFilter = async () => {
   try {
@@ -217,39 +208,3 @@ const handleComplete = async (taskId: number) => {
   }
 }
 </script>
-
-<style scoped>
-/* Estilos responsivos mejorados */
-.container {
-  max-width: 100%;
-  padding: 0 1rem;
-}
-
-@media (min-width: 768px) {
-  .container {
-    max-width: 95%;
-  }
-}
-
-@media (min-width: 1024px) {
-  .container {
-    max-width: 1200px;
-  }
-}
-
-/* Mejoras para la tabla en móviles */
-@media (max-width: 1023px) {
-  .lg\:hidden {
-    display: block;
-  }
-  
-  .lg\:w-1\/2 {
-    width: 100%;
-  }
-  
-  /* Scroll horizontal para la tabla en móviles */
-  .overflow-auto {
-    -webkit-overflow-scrolling: touch;
-  }
-}
-</style>
