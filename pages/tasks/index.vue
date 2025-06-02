@@ -1,22 +1,29 @@
 <template>
-  <div class="container mx-auto px-4 py-8">
-    <div class="flex justify-between items-center mb-8">
-      <h1 class="text-3xl font-bold">Mis Tareas</h1>
-      <nuxt-link
-        to="/tasks/create"
-        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-      >
-        Nueva Tarea
-      </nuxt-link>
+  <div class="w-full">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+      <h1 class="text-2xl md:text-3xl font-bold text-gray-800">Mis Tareas</h1>
+      <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+        <nuxt-link
+          to="/tasks/create"
+          class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition-colors text-center"
+        >
+          Nueva Tarea
+        </nuxt-link>
+      </div>
     </div>
-    <div v-if="loading" class="text-center py-8">
-      Cargando tareas...
+
+    <div v-if="loading" class="text-center py-12">
+      <div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+      <p class="mt-2 text-gray-600">Cargando tareas...</p>
     </div>
-    <TaskListUser
-      v-else
-      :tasks="tasks"
-      @deleted="loadTasks"
-    />
+
+    <div v-else class="bg-white rounded-lg shadow-md overflow-hidden">
+      <TaskListUser
+        :tasks="tasks"
+        @deleted="loadTasks"
+        class="w-full"
+      />
+    </div>
   </div>
 </template>
 
@@ -37,7 +44,6 @@ const loading = ref(true)
 const loadTasks = async () => {
   loading.value = true
   try {
-    // El token y userId se obtienen automáticamente en taskService (usa localStorage)
     tasks.value = await getMyTasks()
   } catch (error) {
     console.error('Error cargando tareas:', error)
@@ -48,3 +54,7 @@ const loadTasks = async () => {
 
 onMounted(loadTasks)
 </script>
+
+<style scoped>
+/* Estilos específicos para esta página */
+</style>

@@ -1,5 +1,6 @@
 <template>
-  <div class="flex flex-col min-h-screen bg-gray-100"> <header class="fixed top-0 left-0 w-full z-50 bg-blue-600 text-white py-4 shadow-md">
+  <div class="flex flex-col min-h-screen bg-gray-100">
+    <header class="fixed top-0 left-0 w-full z-50 bg-blue-600 text-white py-4 shadow-md">
       <div class="container mx-auto flex flex-row items-center justify-between px-4 sm:px-6 lg:px-8">
         
         <h1 class="text-2xl font-bold">Usuario - Gestor de Tareas</h1>
@@ -25,10 +26,11 @@
       </div>
     </header>
 
-    <main class="flex-grow w-full pt-24 pb-8 px-4 sm:px-6 lg:px-8">
-      <div class="container mx-auto"> <slot />
+    <main class="flex-grow w-full pt-24 pb-8">
+      <div class="mx-auto w-full max-w-[1800px] px-4 sm:px-6 lg:px-8 overflow-hidden">
+        <slot />
       </div>
-    </main> 
+    </main>
     
     <footer class="bg-gray-800 text-white py-6 text-sm mt-auto"> <div class="container mx-auto text-center">
         <p>&copy; {{ new Date().getFullYear() }} Gestor de Tareas. Todos los derechos reservados.</p>
@@ -58,10 +60,9 @@ const handleLogout = () => {
   color: #bfdbfe; /* Un azul claro para el link activo (Tailwind color blue-200) */
 }
 
-/* Nota sobre el padding-top de main:
-   Asegúrate de que 'pt-24' (o el valor que uses) sea igual o
-   ligeramente mayor que la altura real de tu header fijo.
-   Si cambias la altura del header (ej. padding 'py' o tamaño de fuente),
-   quizás necesites ajustar este 'pt-24'.
-*/
+html, body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
 </style>

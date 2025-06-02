@@ -15,12 +15,15 @@ export interface Sector {
 }
 
 // TAREA
+
+export type TaskStatus = 'PENDING' | 'COMPLETED' | 'IN_PROGRESS'
+
 export interface Task {
   id: number;
   title: string;
   description: string;
   dueDate: string | null;
-  status: "PENDING" | "COMPLETED" | "IN_PROGRESS";
+  status: TaskStatus;
   userId: number;
   sectorId: number | null;
   location: string | null; // Permitir null

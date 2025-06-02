@@ -9,10 +9,18 @@
         Nueva Tarea
       </nuxt-link>
     </div>
+
+    <!-- Mapa de tareas -->
+    <div class="rounded-lg border border-gray-200 shadow-md">
+      <TaskMap :tasks="tasks" />
+    </div>
+
+    <!-- Lista de tareas -->
     <TaskList
       :tasks="tasks"
       :is-admin="true"
       @deleted="loadTasks"
+      @completed="loadTasks"
     />
   </div>
 </template>
@@ -20,6 +28,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import TaskList from '~/components/tasks/TaskList.vue'
+import TaskMap from '~/components/tasks/TaskMap.vue' // Nuevo componente
 import { getAllTasks } from '~/services/taskService'
 import type { Task } from '~/types/types'
 
