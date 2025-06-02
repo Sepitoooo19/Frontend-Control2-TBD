@@ -2,10 +2,7 @@
   <div class="flex flex-col gap-8">
     <div class="flex justify-between items-center mb-8">
       <h1 class="text-3xl font-bold">Gestión de Tareas (Admin)</h1>
-      <nuxt-link
-        to="/tasks/create"
-        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-      >
+      <nuxt-link to="/tasks/createAdmin" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
         Nueva Tarea
       </nuxt-link>
     </div>

@@ -103,6 +103,11 @@ const props = defineProps<{
   taskId?: number
 }>()
 
+definePageMeta({
+  layout: 'user',
+  middleware: 'auth-role' // Asegura que solo usuarios autenticados accedan
+})
+
 const emit = defineEmits<{
   saved: []
   cancel: []

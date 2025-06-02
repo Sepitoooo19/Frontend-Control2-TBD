@@ -10,7 +10,6 @@
           <li><NuxtLink to="/profile" class="hover:text-blue-200 transition-colors">Mi Perfil</NuxtLink></li>
           <li><NuxtLink to="/tasks" class="hover:text-blue-200 transition-colors">Tareas</NuxtLink></li>
           <li><NuxtLink to="/tasks/create" class="hover:text-blue-200 transition-colors">Crear Tarea</NuxtLink></li>
-          <li><NuxtLink to="/statics" class="hover:text-blue-200 transition-colors">Estadísticas</NuxtLink></li>
           <li><NuxtLink to="/reports" class="hover:text-blue-200 transition-colors">Reportes</NuxtLink></li>
           <li>
             <button 
