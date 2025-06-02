@@ -64,7 +64,7 @@
                 </tr>
               </thead>
               
-<tbody class="bg-white divide-y divide-gray-200">
+            <tbody class="bg-white divide-y divide-gray-200">
               <tr v-for="task in localTasks" :key="task.id">
                 <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">{{ task.id }}</td>
                 <td class="px-4 py-3 text-sm text-gray-900 max-w-[150px] truncate">{{ task.title }}</td>

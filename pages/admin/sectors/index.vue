@@ -59,4 +59,9 @@ const onDelete = async (id: number) => {
 }
 
 onMounted(fetchSectors)
+
+definePageMeta({
+  layout: 'admin',
+  middleware: 'auth-role'
+})
 </script>
