@@ -13,6 +13,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { login as loginService } from '~/services/authService'
+import { getUserLocation } from '~/services/userService' // Importamos el servicio
 import AppInput from '~/components/common/AppInput.vue'
 import AppButton from '~/components/common/AppButton.vue'
 
@@ -26,10 +27,28 @@ const handleLogin = async () => {
   loading.value = true
   loginError.value = ''
   try {
-    const response = await loginService({ username: username.value, password: password.value })
-    const { token, role } = response
+    // 1. Hacer login primero
+    const { token, role } = await loginService({ 
+      username: username.value, 
+      password: password.value 
+    })
+    
+    // Guardar token y rol
     localStorage.setItem('token', token)
     localStorage.setItem('role', role)
+    
+    // 2. Obtener la ubicación después del login exitoso
+    try {
+      const locationData = await getUserLocation()
+      if (locationData.success && locationData.location) {
+        localStorage.setItem('userLocationWKT', locationData.location)
+      }
+    } catch (locationError) {
+      console.warn('No se pudo obtener la ubicación:', locationError)
+      // No es crítico si falla, solo mostramos advertencia
+    }
+
+    // Redirigir según el rol
     if (role === 'ADMIN') {
       router.push('/home-admin')
     } else {

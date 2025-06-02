@@ -41,3 +41,33 @@ export interface ApiResponse {
   message?: string
   data?: any
 }
+
+export interface UserLocationResponse {
+  success: boolean;
+  location: string;
+  coordinates?: {
+    latitude: number;
+    longitude: number;
+  };
+  message?: string;
+}
+
+export interface NearestPendingTask {
+  id: number;
+  title: string;
+  description: string;
+  dueDate: string;
+  status: string;
+  userId: number;
+  sectorId: number;
+  location: string;
+  createdAt: string;
+  // Elimina 'distance' y 'sector' si no vienen del backend
+}
+
+export interface SectorTaskCount {
+  sector: {
+    name: string;
+  };
+  count: number;
+}

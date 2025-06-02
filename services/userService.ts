@@ -1,4 +1,11 @@
-import type { User } from '~/types/types'
+import type { User, UserLocationResponse } from '~/types/types'
+export interface LocationResponse {
+  success: boolean
+  latitude: number
+  longitude: number
+  message?: string
+}
+
 
 export async function getUsers(): Promise<User[]> {
   const config = useRuntimeConfig()
@@ -109,4 +116,40 @@ export async function getAllUsers() {
     method: 'GET'
   })
   return res
+}
+
+export async function getUserLocation(): Promise<{ success: boolean, location: string | null }> {
+  const config = useRuntimeConfig()
+  const token = localStorage.getItem('token')
+  
+  if (!token) {
+    console.error('No hay token de autenticación')
+    return { success: false, location: null }
+  }
+
+  try {
+    const response = await $fetch<LocationResponse>('/users/location', {
+      baseURL: config.public.apiBase,
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    })
+
+    if (response.success) {
+      // Convertir a formato WKT (POINT(longitud latitud))
+      const wktLocation = `POINT(${response.longitude} ${response.latitude})`
+      return { success: true, location: wktLocation }
+    }
+    
+    return { success: false, location: null }
+    
+  } catch (error: any) {
+    console.error('Error obteniendo ubicación:', error)
+    return { 
+      success: false, 
+      location: null,
+    }
+  }
 }
