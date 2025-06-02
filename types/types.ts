@@ -35,3 +35,9 @@ export interface FilterDTO {
   status: string; // "PENDING" | "COMPLETED"
   word: string; // Palabra clave para buscar en título o descripción
 }
+
+export interface ApiResponse {
+  success: boolean
+  message?: string
+  data?: any
+}
