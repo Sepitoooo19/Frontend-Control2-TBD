@@ -68,22 +68,35 @@ export async function updateUserMap(
 // Obtener perfil usuario autenticado
 export async function getProfile(): Promise<User> {
   const config = useRuntimeConfig()
+  const token = localStorage.getItem('token')
+  if (!token) throw new Error('No hay sesión activa.')
   
-  const res = await $fetch<User>('/users/me', {
+  const res = await $fetch<User>('/users/user', {
     baseURL: config.public.apiBase,
-    method: 'GET'
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
   })
   return res
 }
 
 // Actualizar perfil usuario
-export async function updateProfile(id: number, data: Partial<Pick<User, 'name' | 'location'>>): Promise<User> {
+export async function updateProfile(
+  id: number,
+  data: Partial<Pick<User, 'username' | 'name' | 'role' | 'location'>>
+): Promise<User> {
   const config = useRuntimeConfig()
-  
+  const token = localStorage.getItem('token')
+  if (!token) throw new Error('No hay sesión activa.')
+
   const res = await $fetch<User>(`/users/${id}`, {
     baseURL: config.public.apiBase,
     method: 'PUT',
-    body: data
+    body: data,
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
   })
   return res
 }
