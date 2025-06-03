@@ -11,16 +11,17 @@
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-      <!-- Mapa (SIEMPRE visible y con altura) -->
       <div class="h-[400px] md:h-[500px] rounded-lg border border-gray-200 shadow-md bg-white">
-        <TaskMap :tasks="tasks" />
+        <TaskMap :tasks="filteredTasks" />
       </div>
-      <!-- Lista de tareas -->
+      
       <div>
         <TaskListAdmin 
           :tasks="tasks"
-          @edit="onEdit"
-          @delete="onDelete"
+          :is-admin="true"
+          @deleted="onDelete"
+          @completed="onComplete"
+          @filter="handleFilter"
         />
       </div>
     </div>
@@ -28,15 +29,34 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import TaskListAdmin from '~/components/tasks/TaskList.vue'
 import TaskMap from '~/components/tasks/TaskMap.vue'
-import { getAllTasks, deleteTask } from '~/services/taskService'
+import { getAllTasks, deleteTask, updateTask } from '~/services/taskService'
 import type { Task } from '~/types/types'
 
 const tasks = ref<Task[]>([])
+const filter = ref({
+  status: '',
+  search: ''
+})
 const router = useRouter()
+
+// Computed filtered list - this is the single source of truth for filtered tasks
+const filteredTasks = computed(() => {
+  return tasks.value.filter(task => 
+    (!filter.value.status || task.status === filter.value.status) &&
+    (!filter.value.search || 
+     task.title.toLowerCase().includes(filter.value.search.toLowerCase()) ||
+     task.description.toLowerCase().includes(filter.value.search.toLowerCase()))
+  )
+})
+
+// Handle filter changes from child
+const handleFilter = (newFilter: { status: string; search: string }) => {
+  filter.value = newFilter
+}
 
 const fetchTasks = async () => {
   try {
@@ -46,14 +66,25 @@ const fetchTasks = async () => {
   }
 }
 
-const onEdit = (task: Task) => {
-  router.push(`/admin/tasks/${task.id}/edit`)
+const onComplete = async (id: number) => {
+  try {
+    await updateTask(id, { status: 'COMPLETED' })
+    await fetchTasks()
+  } catch (error) {
+    console.error('Error completing task:', error)
+    alert('Error al completar la tarea')
+  }
 }
 
 const onDelete = async (id: number) => {
   if (confirm('¿Estás seguro de eliminar esta tarea?')) {
-    await deleteTask(id)
-    await fetchTasks()
+    try {
+      await deleteTask(id)
+      await fetchTasks()
+    } catch (error) {
+      console.error('Error deleting task:', error)
+      alert('Error al eliminar la tarea')
+    }
   }
 }
 
