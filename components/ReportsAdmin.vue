@@ -14,7 +14,7 @@ const error = ref('');
 onMounted(async () => {
   try {
     const data = await getTaskDistributionByUserAndSector();
-    distribution.value = data;
+    distribution.value = data as TaskDistribution;
   } catch (e: any) {
     error.value = e.message || 'Failed to load task distribution';
     console.error('Error:', e);

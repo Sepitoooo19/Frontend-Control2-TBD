@@ -108,13 +108,14 @@ export async function updateProfile(
   return res
 }
 
-export async function getAllUsers() {
+export async function getAllUsers(): Promise<User[]> {
   const config = useRuntimeConfig()
   
-  const res = await $fetch('/users', {
+  const res = await $fetch<User[]>('/users', {
     baseURL: config.public.apiBase,
     method: 'GET'
   })
+
   return res
 }
 

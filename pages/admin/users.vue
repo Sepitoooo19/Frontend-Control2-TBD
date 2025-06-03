@@ -8,6 +8,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import UserList from '~/components/users/UserList.vue'
+import type { User } from '~/types/types.ts'
 import { getAllUsers } from '~/services/userService'
 
 definePageMeta({
@@ -15,7 +16,7 @@ definePageMeta({
   middleware: 'auth-role'
 })
 
-const users = ref([])
+const users = ref<User[]>([])
 
 const loadUsers = async () => {
   users.value = await getAllUsers()
