@@ -43,6 +43,7 @@ export async function getTaskById(id: number): Promise<Task> {
   })
   return res
 }
+
 export async function createTask(task: {
   title: string;
   description: string;
@@ -178,3 +179,40 @@ export async function getMyTasks(): Promise<Task[]> {
   }
 }
 
+export function isCloseToDueDate(task: Task): boolean {
+  const now = new Date()
+  const dueDate = new Date(task.dueDate)
+  const twelveHoursInMs = 12 * 60 * 60 * 1000
+  return dueDate.getTime() - now.getTime() <= twelveHoursInMs && 
+         dueDate.getTime() > now.getTime()
+}
+
+export function getTimeRemaining(dueDate: string): string {
+  const now = new Date()
+  const due = new Date(dueDate)
+  const msRemaining = due.getTime() - now.getTime()
+  
+  if (msRemaining <= 0) return 'Vencida'
+  
+  const hours = Math.floor(msRemaining / (1000 * 60 * 60))
+  const minutes = Math.floor((msRemaining % (1000 * 60 * 60)) / (1000 * 60))
+  
+  if (hours > 0) return `En ${hours}h ${minutes}m`
+  return `En ${minutes}m`
+}
+
+export function getUrgencyClass(dueDate: string): string {
+  const now = new Date()
+  const due = new Date(dueDate)
+  const hoursLeft = (due.getTime() - now.getTime()) / (1000 * 60 * 60)
+  
+  if (hoursLeft <= 3) return 'bg-red-100 text-red-700'
+  if (hoursLeft <= 6) return 'bg-orange-100 text-orange-700'
+  return 'bg-yellow-100 text-yellow-700'
+}
+
+export function getDueSoonTasks(tasks: Task[]): Task[] {
+  return tasks
+    .filter(task => isCloseToDueDate(task))
+    .sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime())
+}
