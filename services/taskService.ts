@@ -179,6 +179,30 @@ export async function getMyTasks(): Promise<Task[]> {
   }
 }
 
+export async function getTaskDistributionByUserAndSector() {
+  const config = useRuntimeConfig();
+  const token = localStorage.getItem('token');
+
+  if (!token) {
+    console.log('No token available');
+    return { sectors: [], userData: {} };
+  }
+
+  try {
+    const res = await $fetch('/tasks/distribution-by-user-sector', {
+      baseURL: config.public.apiBase,
+      method: 'GET',
+      headers: { Authorization: `Bearer ${token}` }, // Remove Content-Type
+    });
+
+    console.log('Server response:', res);
+    return res;
+  } catch (error) {
+    console.error('Error getting distribution:', error);
+    return { sectors: [], userData: {} };
+  }
+}
+
 export function isCloseToDueDate(task: Task): boolean {
   const now = new Date()
   const dueDate = new Date(task.dueDate)
